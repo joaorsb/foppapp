@@ -16,28 +16,29 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+    android:textAlignment="center">
         <TextView
                 android:id="@+id/tHeadline"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:padding="8dp"
+                android:layout_marginTop="8dp"
+                android:textAlignment="center"
                 android:textSize="20sp" />
         <TextView
                 android:id="@+id/tSourceUrl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:textSize="20sp" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAlignment="center"
+                android:textSize="20sp"/>
         <TextView
                 android:id="@+id/tPublishingDate"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:textAlignment="center"
+                android:padding="8dp"
+                android:layout_marginBottom="8dp"
                 android:textSize="20sp" />
 
     </LinearLayout>

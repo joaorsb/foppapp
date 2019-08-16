@@ -30,12 +30,11 @@ class NewsAdapter (
     }
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        val context = holder.itemView.context
-        val _news = news[position]
-        holder.tHeadline.text = _news.headline
-        holder.tSourceUrl.text = _news.sourceUrl
-        holder.tPublishingDate.text = _news.publishingDate
+        val news = news[position]
+        holder.tHeadline.text = news.headline
+        holder.tSourceUrl.text = news.sourceUrl
+        holder.tPublishingDate.text = news.publishingDate
 
-        holder.itemView.setOnClickListener { onClick(_news)}
+        holder.itemView.setOnClickListener { onClick(news)}
     }
 }
