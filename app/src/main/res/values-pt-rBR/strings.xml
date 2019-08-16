@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Foppal 24/7</string>
+    <string name="noInternet">Não há conexão com a internet!</string>
+    <string name="all">Todas as notícias</string>
+    <string name="brasil">Brasil</string>
+    <string name="deutschland">Alemanha</string>
+    <string name="eliteserien">Eliteserien</string>
+    <string name="espana">Espanha</string>
+    <string name="hello_blank_fragment">Olá fragmento vazio</string>
+    <string name="main_text">Foppal 24/7, sua fonte de notícias de futebol!</string>
+    <string name="navigation_drawer_close">Fechar</string>
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="nederland">Países Baixos</string>
+    <string name="norge">Noruega</string>
+    <string name="obos">OBOS-Ligaen</string>
+    <string name="postnord">PostNord-Ligaen</string>
+    <string name="site">Site</string>
+    <string name="sverige">Suécia</string>
+    <string name="brasileirao">Brasileirão</string>
+    <string name="brazil">brazil</string>
+    <string name="serieb">Brasil B</string>
+    <string name="serie_b">serie_b</string>
+</resources>

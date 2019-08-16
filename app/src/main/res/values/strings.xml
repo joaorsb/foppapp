@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Foppal 24/7</string>
+    <string name="main_text">Foppal 24/7, your football news source!</string>
+    <string name="brasil">Brasil</string>
+    <string name="norge">Norge</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+
+    <!-- All normal text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="postnord">PostNord-Ligaen</string>
+    <string name="obos">OBOS-Ligaen</string>
+    <string name="eliteserien">Eliteserien</string>
+    <string name="site">Site</string>
+    <string name="all">All News</string>
+    <string name="espana">España</string>
+    <string name="nederland">Nederland</string>
+    <string name="sverige">Sverige</string>
+    <string name="deutschland">Deutschland</string>
+    <string name="noInternet">Internet connection not available!</string>
+    <string name="brasileirao">Brasileirão</string>
+    <string name="serieb">Brasil B</string>
+    <string name="serie_b">serie_b</string>
+    <string name="brazil">brazil</string>
+    <string name="laliga" translatable="false">La Liga</string>
+    <string name="laliga2" translatable="false">La Liga 2</string>
+    <string name="allsvenskan" translatable="false">Allsvenskan</string>
+    <string name="eredivisie" translatable="false">Eredivisie</string>
+    <string name="bundesliga" translatable="false">Bundesliga</string>
+    <string name="bundesliga2" translatable="false">2. Bundesliga</string>
+</resources>

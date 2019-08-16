@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/norgeMenu"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent">
+
+    <group android:checkableBehavior="single" android:id="@+id/groupNorge">
+
+        <item
+            android:id="@+id/nav_item_all"
+            android:title="@string/all"
+        />
+        <item
+            android:id="@+id/nav_item_eliteserien"
+            android:title="@string/eliteserien"
+        />
+        <item
+            android:id="@+id/nav_item_obos"
+            android:title="@string/obos"
+        />
+        <item
+            android:id="@+id/nav_item_postnord"
+            android:title="@string/postnord"
+        />
+
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/groupBrasil">
+
+        <item
+                android:id="@+id/nav_item_brasil_all"
+                android:title="@string/all"
+        />
+        <item
+                android:id="@+id/nav_item_brasileirao"
+                android:title="@string/brasileirao"
+        />
+        <item
+                android:id="@+id/nav_item_serieb"
+                android:title="@string/serieb"
+        />
+
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/groupEspana">
+
+        <item
+                android:id="@+id/nav_item_espana_all"
+                android:title="@string/all"
+        />
+        <item
+                android:id="@+id/nav_item_laliga"
+                android:title="@string/laliga"
+        />
+        <item
+                android:id="@+id/nav_item_laliga2"
+                android:title="@string/laliga2"
+        />
+
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/groupSverige">
+
+        <item
+                android:id="@+id/nav_item_sverige_all"
+                android:title="@string/all"
+        />
+        <item
+                android:id="@+id/nav_item_allsvenskan"
+                android:title="@string/allsvenskan"
+        />
+
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/groupNederland">
+
+        <item
+                android:id="@+id/nav_item_nederland_all"
+                android:title="@string/all"
+        />
+        <item
+                android:id="@+id/nav_item_eredivisie"
+                android:title="@string/eredivisie"
+        />
+
+    </group>
+    <group android:checkableBehavior="single" android:id="@+id/groupDeutschland">
+
+        <item
+                android:id="@+id/nav_item_deutschland_all"
+                android:title="@string/all"
+        />
+        <item
+                android:id="@+id/nav_item_bundesliga"
+                android:title="@string/bundesliga"
+        />
+        <item
+                android:id="@+id/nav_item_bundesliga2"
+                android:title="@string/bundesliga2"
+        />
+
+    </group>
+
+</menu>
