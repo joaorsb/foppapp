@@ -7,33 +7,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.foppal247.foppapp.domain.LeagueTypes
 import com.foppal247.foppapp.R
-import com.foppal247.foppapp.adapter.NewsAdapter
-import com.foppal247.foppapp.domain.News
-import com.foppal247.foppapp.domain.NewsService
-import kotlinx.android.synthetic.main.fragment_leagues.*
-import android.content.Intent
-import android.net.Uri
+import kotlinx.android.synthetic.main.fragment_teams.*
 import com.foppal247.foppapp.FoppalApplication
+import com.foppal247.foppapp.activity.NewsListActivity
+import com.foppal247.foppapp.adapter.TeamsAdapter
+import com.foppal247.foppapp.domain.FootballTeamsService
+import com.foppal247.foppapp.domain.model.Team
 import com.foppal247.foppapp.utils.AndroidUtils
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.uiThread
 
 
-class LeaguesFragment : BaseFragment() {
-    private var leagueType: LeagueTypes? = LeagueTypes.eliteserien
-    private var newsList = listOf<News>()
-
-    override fun onCreate(icicle: Bundle?) {
-        super.onCreate(icicle)
-
-    }
+class TeamsFragment : BaseFragment() {
+    private var teamsList = listOf<Team>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_leagues, container, false)
+        val view = inflater.inflate(R.layout.fragment_teams, container, false)
         return view
 
     }
@@ -49,32 +42,32 @@ class LeaguesFragment : BaseFragment() {
     @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
-        swipeFragment.setOnRefreshListener { taskNews() }
+        swipeFragment.setOnRefreshListener { taskGetTeams() }
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,
             R.color.refresh_progress_2,
             R.color.refresh_progress_3
         )
-        taskNews()
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        taskGetTeams()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        newsList = listOf()
+        teamsList = listOf()
     }
 
-    private fun taskNews(){
+    private fun taskGetTeams(){
         if(AndroidUtils.isNetworkAvailable(context)){
             doAsync {
                 swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
 
-                if(FoppalApplication.getInstance().league?.string == R.string.all) {
-                    newsList = NewsService.getAllNews(context)
-                } else {
-                    newsList = NewsService.getLeagueNews(context)
-                }
+                teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
                 uiThread {
-                    recyclerView.adapter = NewsAdapter(newsList) { onClickNews(it)}
+                    recyclerView.adapter = TeamsAdapter(teamsList) { onClickTeam(it)}
                     swipeFragment.isRefreshing = false
 
                 }
@@ -83,13 +76,11 @@ class LeaguesFragment : BaseFragment() {
             var errorMessage = context?.getText(R.string.noInternet)
             toast(errorMessage!!)
         }
-
     }
 
-    fun onClickNews(news: News) {
-        val url = news.url
-        val intentToBrowser = Intent(Intent.ACTION_VIEW)
-        intentToBrowser.data = Uri.parse(url)
-        startActivity(intentToBrowser)
+    fun onClickTeam(team: Team) {
+        FoppalApplication.getInstance().selectedIntlTeamName = team.intlName
+        FoppalApplication.getInstance().selectedTeamName = team.teamName
+        startActivity<NewsListActivity>("leagueType" to FoppalApplication.getInstance().league)
     }
 }

@@ -11,29 +11,23 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.foppal247.foppapp.FoppalApplication
-import com.foppal247.foppapp.domain.Country
 import com.foppal247.foppapp.R
+
 import kotlinx.android.synthetic.main.fragment_countries.*
 import com.foppal247.foppapp.adapter.CountryAdapter
-import com.foppal247.foppapp.domain.CountryService
+import com.foppal247.foppapp.domain.*
+import com.foppal247.foppapp.domain.model.Country
+import com.foppal247.foppapp.utils.FootballTeamsHelper
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.activity_main.*
-
 
 
 class CountriesFragment: BaseFragment() {
     private var countriesList = listOf<Country>()
 
-    override fun onCreate(icicle: Bundle?) {
-        super.onCreate(icicle)
-
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
         val view = inflater?.inflate(R.layout.fragment_countries, container, false)
         return view
-
     }
 
     override fun onViewCreated(view: View, icicle: Bundle?) {
@@ -41,38 +35,27 @@ class CountriesFragment: BaseFragment() {
         recyclerViewCountries.layoutManager = LinearLayoutManager(activity)
         recyclerViewCountries.itemAnimator = DefaultItemAnimator()
         recyclerViewCountries.setHasFixedSize(true)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         taskCountries()
 
     }
 
-
     private fun taskCountries(){
         countriesList = CountryService.getCountries(context)
-        recyclerViewCountries.adapter = CountryAdapter(countriesList) { onClickCountry(it)}
-
+        recyclerViewCountries.adapter = CountryAdapter(countriesList) { onClickCountry(it) }
     }
 
     private fun onClickCountry(country: Country) {
-
-        var navView = activity?.findViewById<NavigationView>(R.id.nav_view)
+        val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
         FoppalApplication.getInstance().country = country.countryName
         navView?.menu?.forEach { item: MenuItem ->  item.isVisible = false}
-
-
-        if(FoppalApplication.getInstance().country == context?.getString(R.string.norge)){
-            FoppalApplication.getInstance().menuGroupId = R.id.groupNorge
-        }else if (FoppalApplication.getInstance().country == context?.getString(R.string.brasil)) {
-            FoppalApplication.getInstance().menuGroupId = R.id.groupBrasil
-        }else if (FoppalApplication.getInstance().country == context?.getString(R.string.espana)) {
-            FoppalApplication.getInstance().menuGroupId = R.id.groupEspana
-        } else if (FoppalApplication.getInstance().country == context?.getString(R.string.sverige)) {
-            FoppalApplication.getInstance().menuGroupId = R.id.groupSverige
-        } else if (FoppalApplication.getInstance().country == context?.getString(R.string.nederland)) {
-            FoppalApplication.getInstance().menuGroupId = R.id.groupNederland
-        } else if (FoppalApplication.getInstance().country == context?.getString(R.string.deutschland) ) {
-            FoppalApplication.getInstance().menuGroupId = R.id.groupDeutschland
+        setAppMenuGroupId()
+        if (FoppalApplication.getInstance().footballTeams.isEmpty()){
+            FootballTeamsHelper.taskFootballTeamsRest(context)
         }
-
         navView?.menu?.forEach { item: MenuItem ->
             if (item.groupId == FoppalApplication.getInstance().menuGroupId) {
                 navView?.menu?.setGroupVisible(FoppalApplication.getInstance().menuGroupId, true)
@@ -82,4 +65,31 @@ class CountriesFragment: BaseFragment() {
         val drawer = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer?.openDrawer(GravityCompat.START)
     }
+
+    private fun setAppMenuGroupId() {
+        when (FoppalApplication.getInstance().country) {
+            context?.getString(R.string.norge) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupNorge
+            }
+            context?.getString(R.string.brasil) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupBrasil
+            }
+            context?.getString(R.string.espana) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupEspana
+            }
+            context?.getString(R.string.sverige) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupSverige
+            }
+            context?.getString(R.string.nederland) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupNederland
+            }
+            context?.getString(R.string.deutschland) -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupDeutschland
+            }
+            else -> {
+                FoppalApplication.getInstance().menuGroupId = R.id.groupNorge
+            }
+        }
+    }
+
 }

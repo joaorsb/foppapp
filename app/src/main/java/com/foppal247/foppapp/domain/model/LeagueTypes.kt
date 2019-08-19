@@ -1,8 +1,8 @@
-package com.foppal247.foppapp.domain
+package com.foppal247.foppapp.domain.model
 
 import com.foppal247.foppapp.R
 
-enum class LeagueTypes(val string: Int) {
+enum class LeagueTypes(val leagueName: Int) {
     all(R.string.all),
     eliteserien(R.string.eliteserien),
     obos(R.string.obos),

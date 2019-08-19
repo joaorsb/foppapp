@@ -1,4 +1,4 @@
-package com.foppal247.foppapp.domain
+package com.foppal247.foppapp.domain.model
 
 import com.google.gson.annotations.SerializedName
 

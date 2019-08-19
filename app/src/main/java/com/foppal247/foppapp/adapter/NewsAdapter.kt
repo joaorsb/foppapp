@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.foppal247.foppapp.R
-import com.foppal247.foppapp.domain.News
+import com.foppal247.foppapp.domain.model.News
+import java.text.SimpleDateFormat
+import java.time.Instant
 
 class NewsAdapter (
     val news: List<News>,
@@ -31,6 +33,7 @@ class NewsAdapter (
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val news = news[position]
+
         holder.tHeadline.text = news.headline
         holder.tSourceUrl.text = news.sourceUrl
         holder.tPublishingDate.text = news.publishingDate

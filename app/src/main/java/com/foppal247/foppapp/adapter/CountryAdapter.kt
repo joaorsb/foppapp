@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.foppal247.foppapp.R
-import com.foppal247.foppapp.domain.Country
+import com.foppal247.foppapp.domain.model.Country
 
 
 class CountryAdapter (
