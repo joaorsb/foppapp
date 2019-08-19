@@ -31,7 +31,6 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.splash_screen)
         //Initialize the Handler
         mDelayHandler = Handler()
-        FootballTeamsHelper.getFootballTeamsLocal()
 
         //Navigate with delay
         mDelayHandler!!.postDelayed(mRunnable, SPLASH_DELAY)

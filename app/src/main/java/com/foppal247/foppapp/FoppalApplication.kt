@@ -9,7 +9,7 @@ import java.lang.IllegalStateException
 class FoppalApplication : Application() {
     private val TAG = "FoppalApplication"
     var league: LeagueTypes? = LeagueTypes.all
-    var country: String? = "Norge"
+    var country: String? = "norge"
     var footballTeams: List<FootballTeam> = listOf<FootballTeam>()
     var selectedIntlTeamName: String? = ""
     var selectedTeamName: String? = ""

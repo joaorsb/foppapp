@@ -40,7 +40,6 @@ class CountriesFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         taskCountries()
-
     }
 
     private fun taskCountries(){
@@ -50,12 +49,10 @@ class CountriesFragment: BaseFragment() {
 
     private fun onClickCountry(country: Country) {
         val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
-        FoppalApplication.getInstance().country = country.countryName
+        FoppalApplication.getInstance().country = country.countryAPIName
+        FoppalApplication.getInstance().menuGroupId = country.menuGroupId
         navView?.menu?.forEach { item: MenuItem ->  item.isVisible = false}
-        setAppMenuGroupId()
-        if (FoppalApplication.getInstance().footballTeams.isEmpty()){
-            FootballTeamsHelper.taskFootballTeamsRest(context)
-        }
+
         navView?.menu?.forEach { item: MenuItem ->
             if (item.groupId == FoppalApplication.getInstance().menuGroupId) {
                 navView?.menu?.setGroupVisible(FoppalApplication.getInstance().menuGroupId, true)
@@ -64,32 +61,6 @@ class CountriesFragment: BaseFragment() {
 
         val drawer = activity?.findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer?.openDrawer(GravityCompat.START)
-    }
-
-    private fun setAppMenuGroupId() {
-        when (FoppalApplication.getInstance().country) {
-            context?.getString(R.string.norge) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupNorge
-            }
-            context?.getString(R.string.brasil) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupBrasil
-            }
-            context?.getString(R.string.espana) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupEspana
-            }
-            context?.getString(R.string.sverige) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupSverige
-            }
-            context?.getString(R.string.nederland) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupNederland
-            }
-            context?.getString(R.string.deutschland) -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupDeutschland
-            }
-            else -> {
-                FoppalApplication.getInstance().menuGroupId = R.id.groupNorge
-            }
-        }
     }
 
 }

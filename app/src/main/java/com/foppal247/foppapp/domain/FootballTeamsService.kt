@@ -28,10 +28,9 @@ object FootballTeamsService {
     }
 
     fun getFootballTeamsByLeagueREST() : List<Team>{
-        val country = CountryService.getAppCountries(FoppalApplication.getInstance().applicationContext)
+        val country = FoppalApplication.getInstance().country
         val leagueName = LeagueHelper.getLeagueName()
         val mainURL = "https://www.foppal247.com/$country/api/league_list/$leagueName/"
-//        val mainURL = "https://www.foppal247.com/brazil/api/league_list/brasileirao/"
         val json = HttpHelper.get(mainURL)
         val footballTeams = fromJson<List<Team>>(json)
         Log.d(TAG, leagueName)

@@ -11,8 +11,8 @@ import java.net.URL
 
 object NewsService {
     private const val TAG = "NewsService"
-    fun getAllNews(context: Context?) : List<News>{
-        val country = CountryService.getAppCountries(context)
+    fun getAllNews() : List<News>{
+        val country = FoppalApplication.getInstance().country
         val mainURL = "https://www.foppal247.com/$country/api/?page=1"
         Log.d(TAG, mainURL)
         val json = HttpHelper.get(mainURL)
@@ -22,9 +22,9 @@ object NewsService {
         return news
     }
 
-    fun getLeagueNews(context: Context?) : List<News>{
+    fun getLeagueNews() : List<News>{
         var leagueName: String
-        val country = CountryService.getAppCountries(context)
+        val country = FoppalApplication.getInstance().country
 
         leagueName = LeagueHelper.getLeagueName()
         val leagueUrl = "https://www.foppal247.com/${country}/api/leagues/$leagueName?page=1"
@@ -36,8 +36,8 @@ object NewsService {
         return news
     }
 
-    fun getTeamNews(context: Context?) : List<News>{
-        val country = CountryService.getAppCountries(context)
+    fun getTeamNews() : List<News>{
+        val country = FoppalApplication.getInstance().country
         val teamName = FoppalApplication.getInstance().selectedIntlTeamName
         val leagueUrl = "https://www.foppal247.com/${country}/api/teams/$teamName?page=1"
         Log.d(TAG, leagueUrl)

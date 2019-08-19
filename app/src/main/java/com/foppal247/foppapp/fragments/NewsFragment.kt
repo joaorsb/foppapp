@@ -69,13 +69,13 @@ class NewsFragment : BaseFragment() {
 
                 if (FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()) {
                     if (FoppalApplication.getInstance().league?.leagueName == R.string.all) {
-                        newsList = NewsService.getAllNews(context)
+                        newsList = NewsService.getAllNews()
                     } else {
-                        newsList = NewsService.getLeagueNews(context)
+                        newsList = NewsService.getLeagueNews()
                     }
 
                 } else {
-                    newsList = NewsService.getTeamNews(context)
+                    newsList = NewsService.getTeamNews()
                 }
                 uiThread {
                     recyclerView.adapter = NewsAdapter(newsList) { onClickNews(it) }
