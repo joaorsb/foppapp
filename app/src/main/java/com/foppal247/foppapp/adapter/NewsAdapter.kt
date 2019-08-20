@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.foppal247.foppapp.R
 import com.foppal247.foppapp.domain.model.News
-import java.text.SimpleDateFormat
-import java.time.Instant
+import com.foppal247.foppapp.FoppalApplication
+
 
 class NewsAdapter (
     val news: List<News>,
@@ -33,11 +33,19 @@ class NewsAdapter (
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val news = news[position]
-
+        val arrayDate = news.publishingDate.split('-', 'T')
+        val arrayHour = arrayDate[3].split(":")
+        var dateString = ""
+        if(FoppalApplication.getInstance().country != "brazil") {
+            dateString = "${arrayDate[2]}/${arrayDate[1]}/${arrayDate[0]} ${arrayHour[0]}:${arrayHour[1]}"
+        } else {
+            dateString = "${arrayDate[2]}/${arrayDate[1]}/${arrayDate[0]}"
+        }
         holder.tHeadline.text = news.headline
         holder.tSourceUrl.text = news.sourceUrl
-        holder.tPublishingDate.text = news.publishingDate
+        holder.tPublishingDate.text = dateString
 
         holder.itemView.setOnClickListener { onClick(news)}
     }
+
 }

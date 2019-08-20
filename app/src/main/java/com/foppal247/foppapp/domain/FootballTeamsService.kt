@@ -1,6 +1,5 @@
 package com.foppal247.foppapp.domain
 
-import android.util.Log
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.dao.DatabaseManager
 import com.foppal247.foppapp.domain.model.FootballTeam
@@ -33,8 +32,6 @@ object FootballTeamsService {
         val mainURL = "https://www.foppal247.com/$country/api/league_list/$leagueName/"
         val json = HttpHelper.get(mainURL)
         val footballTeams = fromJson<List<Team>>(json)
-        Log.d(TAG, leagueName)
-        Log.d(TAG, country)
         return footballTeams
     }
 }

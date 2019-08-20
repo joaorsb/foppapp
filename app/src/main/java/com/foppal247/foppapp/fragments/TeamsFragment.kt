@@ -33,6 +33,7 @@ class TeamsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, icicle: Bundle?) {
         super.onViewCreated(view, icicle)
+        super.checkConnection()
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
@@ -52,7 +53,9 @@ class TeamsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        taskGetTeams()
+        if(super.hasConnection){
+            taskGetTeams()
+        }
     }
 
     override fun onDestroy() {
@@ -61,21 +64,16 @@ class TeamsFragment : BaseFragment() {
     }
 
     private fun taskGetTeams(){
-        if(AndroidUtils.isNetworkAvailable(context)){
-            doAsync {
-                swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
+        doAsync {
+            swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
 
-                teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
-                uiThread {
-                    recyclerView.adapter = TeamsAdapter(teamsList) { onClickTeam(it)}
-                    swipeFragment.isRefreshing = false
-
-                }
+            teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
+            uiThread {
+                recyclerView.adapter = TeamsAdapter(teamsList) { onClickTeam(it)}
+                swipeFragment.isRefreshing = false
             }
-        } else {
-            var errorMessage = context?.getText(R.string.noInternet)
-            toast(errorMessage!!)
         }
+
     }
 
     fun onClickTeam(team: Team) {

@@ -15,14 +15,15 @@ import kotlinx.android.synthetic.main.fragment_news.*
 import android.content.Intent
 import android.net.Uri
 import com.foppal247.foppapp.FoppalApplication
-import com.foppal247.foppapp.utils.AndroidUtils
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.uiThread
+
+
 
 
 class NewsFragment : BaseFragment() {
     private var newsList = listOf<News>()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
@@ -33,6 +34,7 @@ class NewsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, icicle: Bundle?) {
         super.onViewCreated(view, icicle)
+        super.checkConnection()
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
@@ -42,7 +44,7 @@ class NewsFragment : BaseFragment() {
     @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
-        swipeFragment.setOnRefreshListener { taskNews() }
+        swipeFragment.setOnRefreshListener { if(hasConnection) taskNews()}
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,
             R.color.refresh_progress_2,
@@ -52,7 +54,13 @@ class NewsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        taskNews()
+        checkConnection()
+        if(super.hasConnection && FoppalApplication.getInstance().newsList.isEmpty()) {
+            taskNews()
+        } else {
+            recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
+            swipeFragment.isRefreshing = false
+        }
     }
 
     override fun onDestroy() {
@@ -63,29 +71,23 @@ class NewsFragment : BaseFragment() {
     }
 
     private fun taskNews(){
-        if(AndroidUtils.isNetworkAvailable(context)){
-            doAsync {
-                swipeFragment.isRefreshing = !swipeFragment.isRefreshing
+        doAsync {
+            swipeFragment.isRefreshing = !swipeFragment.isRefreshing
 
-                if (FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()) {
-                    if (FoppalApplication.getInstance().league?.leagueName == R.string.all) {
-                        newsList = NewsService.getAllNews()
-                    } else {
-                        newsList = NewsService.getLeagueNews()
-                    }
-
+            if (FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()) {
+                if (FoppalApplication.getInstance().league?.leagueName == R.string.all) {
+                    FoppalApplication.getInstance().newsList = NewsService.getAllNews()
                 } else {
-                    newsList = NewsService.getTeamNews()
+                    FoppalApplication.getInstance().newsList = NewsService.getLeagueNews()
                 }
-                uiThread {
-                    recyclerView.adapter = NewsAdapter(newsList) { onClickNews(it) }
-                    swipeFragment.isRefreshing = false
 
-                }
+            } else {
+                FoppalApplication.getInstance().newsList = NewsService.getTeamNews()
             }
-        } else {
-            var errorMessage = context?.getText(R.string.noInternet)
-            toast(errorMessage!!)
+            uiThread {
+                recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
+                swipeFragment.isRefreshing = false
+            }
         }
     }
 
@@ -95,4 +97,5 @@ class NewsFragment : BaseFragment() {
         intentToBrowser.data = Uri.parse(url)
         startActivity(intentToBrowser)
     }
+
 }

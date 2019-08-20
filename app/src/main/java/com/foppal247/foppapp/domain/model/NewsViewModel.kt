@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 
 
 class NewsViewModel : ViewModel() {
-    private val newsLiveData = MutableLiveData<News>()
+    private var newsLiveData = MutableLiveData<News>()
     var selectedTeam = MutableLiveData<String>()
 
     val news: LiveData<News>
         get() = newsLiveData
 
-    internal fun doAction() {
-        // depending on the action, do necessary business logic calls and update the
-        // userLiveData.
+    init  {
+
+    }
+
+    internal fun loadNewsREST() {
+
     }
 }// trigger user load.

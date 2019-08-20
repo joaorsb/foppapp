@@ -53,6 +53,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        FoppalApplication.getInstance().newsList = listOf()
         when(item.itemId) {
             R.id.nav_item_norge_all -> {
                 foppalInstance.league = LeagueTypes.all

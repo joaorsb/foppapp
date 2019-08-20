@@ -8,6 +8,7 @@ import com.foppal247.foppapp.extensions.addFragment
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.foppal247.foppapp.fragments.NewsFragment
 
+
 class NewsListActivity : BaseActivity() {
 
     override fun onCreate(icicle: Bundle?) {
@@ -15,7 +16,6 @@ class NewsListActivity : BaseActivity() {
         setContentView(R.layout.activity_news_list)
         val league = intent.getSerializableExtra("leagueType") as LeagueTypes
         val title: String
-
 
         if(FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()){
             if(league != LeagueTypes.serie_b){
