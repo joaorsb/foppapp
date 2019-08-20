@@ -11,9 +11,14 @@ import com.foppal247.foppapp.utils.LeagueHelper
 object FootballTeamsService {
     private const val TAG = "FootballTeamsService"
 
-    fun getFootballTeams(): List<FootballTeam> {
+    fun getFootballTeams(): MutableList<FootballTeam> {
         val dao = DatabaseManager.getFootballTeamsDAO()
         return dao.findAll()
+    }
+
+    fun getFootballTeamsByLeague(leagueId: Int?): MutableList<FootballTeam> {
+        val dao = DatabaseManager.getFootballTeamsDAO()
+        return dao.getFootballTeamsByLeague(leagueId)
     }
 
     fun deleteFootballTeam(intlName: String) : Boolean{

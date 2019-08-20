@@ -10,7 +10,7 @@ class FootballTeam {
     var id: Long = 0
     var teamName = ""
     var intlName = ""
-    var league: Int = 0
+    var league: Int? = 0
 
     override fun toString(): String {
         return intlName

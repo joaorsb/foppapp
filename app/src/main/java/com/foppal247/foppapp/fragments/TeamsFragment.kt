@@ -13,11 +13,11 @@ import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.activity.NewsListActivity
 import com.foppal247.foppapp.adapter.TeamsAdapter
 import com.foppal247.foppapp.domain.FootballTeamsService
+import com.foppal247.foppapp.domain.dao.DatabaseManager
+import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
-import com.foppal247.foppapp.utils.AndroidUtils
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.uiThread
 
 
@@ -53,8 +53,14 @@ class TeamsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+//        taskGetLocalTeams()
+
         if(super.hasConnection){
-            taskGetTeams()
+            if(FoppalApplication.getInstance().footballTeams.isNullOrEmpty()) {
+                taskGetTeams()
+            } else {
+                recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
+            }
         }
     }
 
@@ -66,19 +72,33 @@ class TeamsFragment : BaseFragment() {
     private fun taskGetTeams(){
         doAsync {
             swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
-
-            teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
+                teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
+                teamsList.forEach {team: Team -> run {
+                        val footballTeam = FootballTeam()
+                        footballTeam.intlName = team.intlName
+                        footballTeam.teamName = team.teamName
+                        footballTeam.league = FoppalApplication.getInstance().league?.leagueName
+                        val dao = DatabaseManager.getFootballTeamsDAO()
+                        dao.insert(footballTeam)
+                        FoppalApplication.getInstance().footballTeams.add(footballTeam)
+                    }
+                }
             uiThread {
-                recyclerView.adapter = TeamsAdapter(teamsList) { onClickTeam(it)}
+                recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
                 swipeFragment.isRefreshing = false
             }
         }
 
     }
 
-    fun onClickTeam(team: Team) {
+    fun onClickTeam(team: FootballTeam) {
+        FoppalApplication.getInstance().englishNews = false
+        FoppalApplication.getInstance().newsList = listOf()
+
         FoppalApplication.getInstance().selectedIntlTeamName = team.intlName
         FoppalApplication.getInstance().selectedTeamName = team.teamName
         startActivity<NewsListActivity>("leagueType" to FoppalApplication.getInstance().league)
     }
+
+
 }

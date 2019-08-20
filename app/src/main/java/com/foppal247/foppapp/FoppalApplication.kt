@@ -10,11 +10,12 @@ class FoppalApplication : Application() {
     private val TAG = "FoppalApplication"
     var league: LeagueTypes? = LeagueTypes.all
     var country: String? = "norge"
-    var footballTeams: List<FootballTeam> = listOf()
+    var footballTeams: MutableList<FootballTeam> = mutableListOf()
     var newsList: List<News> = listOf()
     var selectedIntlTeamName: String? = ""
     var selectedTeamName: String? = ""
     var menuGroupId = 0
+    var englishNews: Boolean = false
     override fun onCreate() {
         super.onCreate()
         appInstance = this
@@ -23,8 +24,9 @@ class FoppalApplication : Application() {
     fun clearAllData(){
         selectedIntlTeamName = ""
         selectedTeamName = ""
-        footballTeams = listOf()
+        footballTeams = mutableListOf()
         newsList = listOf()
+        englishNews = false
     }
 
     companion object {

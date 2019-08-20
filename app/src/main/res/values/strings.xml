@@ -40,4 +40,6 @@
     <string name="postnord_teams">PostNord-Ligaen Teams</string>
     <string name="obos_teams">OBOS-Ligaen Teams</string>
     <string name="eliteserien_teams">Eliteserien Teams</string>
+    <string name="site_fp" translatable="false">foppal247.com</string>
+    <string name="all_en">News in English</string>
 </resources>

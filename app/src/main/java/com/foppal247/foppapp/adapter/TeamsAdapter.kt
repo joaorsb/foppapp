@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
 
 class TeamsAdapter (
-    val teams: List<Team>,
-    val onClick: (Team) -> Unit) :
+    val teams: MutableList<FootballTeam>,
+    val onClick: (FootballTeam) -> Unit) :
     RecyclerView.Adapter<TeamsAdapter.TeamsViewHolder> () {
     class TeamsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tTeamName : TextView

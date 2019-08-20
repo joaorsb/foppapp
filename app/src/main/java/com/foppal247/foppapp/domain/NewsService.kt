@@ -11,7 +11,12 @@ object NewsService {
     private const val TAG = "NewsService"
     fun getAllNews() : List<News>{
         val country = FoppalApplication.getInstance().country
-        val mainURL = "https://www.foppal247.com/$country/api/?page=1"
+        val mainURL: String
+        if(FoppalApplication.getInstance().englishNews){
+            mainURL = "https://www.foppal247.com/$country/api/language/en?page=1"
+        } else {
+            mainURL = "https://www.foppal247.com/$country/api/?page=1"
+        }
         val json = HttpHelper.get(mainURL)
         val news = fromJson<List<News>>(json)
 

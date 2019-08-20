@@ -55,6 +55,9 @@
                 android:id="@+id/nav_item_espana_all"
                 android:title="@string/all"/>
         <item
+                android:id="@+id/nav_item_espana_all_en"
+                android:title="@string/all_en"/>
+        <item
                 android:id="@+id/nav_item_laliga"
                 android:title="@string/laliga"/>
         <item
@@ -87,6 +90,9 @@
                 android:id="@+id/nav_item_nederland_all"
                 android:title="@string/all"/>
         <item
+                android:id="@+id/nav_item_nederland_all_en"
+                android:title="@string/all_en"/>
+        <item
                 android:id="@+id/nav_item_eredivisie"
                 android:title="@string/eredivisie"/>
         <item
@@ -99,6 +105,9 @@
         <item
                 android:id="@+id/nav_item_deutschland_all"
                 android:title="@string/all"/>
+        <item
+                android:id="@+id/nav_item_deutschland_all_en"
+                android:title="@string/all_en"/>
         <item
                 android:id="@+id/nav_item_bundesliga"
                 android:title="@string/bundesliga"/>

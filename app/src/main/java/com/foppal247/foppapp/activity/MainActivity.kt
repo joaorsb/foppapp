@@ -8,6 +8,7 @@ import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.FootballTeamsService
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.google.android.material.navigation.NavigationView
 import com.foppal247.foppapp.domain.model.LeagueTypes
@@ -16,6 +17,7 @@ import com.foppal247.foppapp.fragments.CountriesFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.toolbar.*
+import org.jetbrains.anko.doAsync
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -54,6 +56,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         FoppalApplication.getInstance().newsList = listOf()
+        FoppalApplication.getInstance().englishNews = false
         when(item.itemId) {
             R.id.nav_item_norge_all -> {
                 foppalInstance.league = LeagueTypes.all
@@ -75,6 +78,22 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 foppalInstance.league = LeagueTypes.all
                 startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
             }
+
+            R.id.nav_item_deutschland_all_en -> {
+                foppalInstance.league = LeagueTypes.all
+                FoppalApplication.getInstance().englishNews = true
+                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
+            }
+            R.id.nav_item_espana_all_en -> {
+                foppalInstance.league = LeagueTypes.all
+                FoppalApplication.getInstance().englishNews = true
+                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
+            }
+            R.id.nav_item_nederland_all_en -> {
+                foppalInstance.league = LeagueTypes.all
+                FoppalApplication.getInstance().englishNews = true
+                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
+            }
             R.id.nav_item_sverige_all -> {
                 foppalInstance.league = LeagueTypes.all
                 startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
@@ -85,6 +104,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_eliteserien_teams -> {
                 foppalInstance.league = LeagueTypes.eliteserien
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.eliteserien)
             }
             R.id.nav_item_obos -> {
@@ -93,6 +113,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_obos_teams -> {
                 foppalInstance.league = LeagueTypes.obos
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.obos)
             }
             R.id.nav_item_postnord -> {
@@ -101,6 +122,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_postnord_teams -> {
                 foppalInstance.league = LeagueTypes.postnord
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.postnord)
             }
             R.id.nav_item_brasileirao -> {
@@ -109,6 +131,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_brasileirao_teams -> {
                 foppalInstance.league = LeagueTypes.brasileirao
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.brasileirao)
             }
             R.id.nav_item_serieb -> {
@@ -117,6 +140,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_serieb_teams -> {
                 foppalInstance.league = LeagueTypes.serie_b
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.serie_b)
             }
             R.id.nav_item_laliga -> {
@@ -125,6 +149,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_laliga_teams -> {
                 foppalInstance.league = LeagueTypes.laliga
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.laliga)
             }
             R.id.nav_item_laliga2 -> {
@@ -133,6 +158,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_laliga2_teams -> {
                 foppalInstance.league = LeagueTypes.laliga2
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.laliga2)
             }
             R.id.nav_item_allsvenskan -> {
@@ -141,6 +167,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_allsvenskan_teams -> {
                 foppalInstance.league = LeagueTypes.allsvenskan
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.allsvenskan)
             }
             R.id.nav_item_eredivisie -> {
@@ -149,6 +176,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_eredivisie_teams -> {
                 foppalInstance.league = LeagueTypes.eredivisie
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.eredivisie)
             }
             R.id.nav_item_bundesliga -> {
@@ -157,6 +185,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_bundesliga_teams -> {
                 foppalInstance.league = LeagueTypes.bundesliga
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.bundesliga)
             }
             R.id.nav_item_bundesliga2 -> {
@@ -165,11 +194,28 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
             R.id.nav_item_bundesliga2_teams -> {
                 foppalInstance.league = LeagueTypes.bundesliga2
+                taskGetLocalTeams()
                 startActivity<TeamsActivity>("leagueType" to LeagueTypes.bundesliga2)
             }
         }
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun onBackPressed() {
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    fun taskGetLocalTeams() {
+        doAsync {
+            FoppalApplication.getInstance().footballTeams =
+                FootballTeamsService.getFootballTeamsByLeague(FoppalApplication.getInstance().league?.leagueName)
+        }
     }
 }

@@ -14,8 +14,11 @@ interface FootballTeamDAO {
     @Query("SELECT * from football_team where intlName = :intlName")
     fun getByIntlName(intlName: String): FootballTeam?
 
+    @Query("SELECT * from football_team where league = :leagueId")
+    fun getFootballTeamsByLeague(leagueId: Int?): MutableList<FootballTeam>
+
     @Query("Select * from football_team")
-    fun findAll(): List<FootballTeam>
+    fun findAll(): MutableList<FootballTeam>
 
     @Insert
     fun insert(footballTeam: FootballTeam)
