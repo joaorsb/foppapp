@@ -93,7 +93,7 @@ class TeamsFragment : BaseFragment() {
 
     fun onClickTeam(team: FootballTeam) {
         FoppalApplication.getInstance().englishNews = false
-        FoppalApplication.getInstance().newsList = listOf()
+        FoppalApplication.getInstance().newsList = mutableListOf()
 
         FoppalApplication.getInstance().selectedIntlTeamName = team.intlName
         FoppalApplication.getInstance().selectedTeamName = team.teamName

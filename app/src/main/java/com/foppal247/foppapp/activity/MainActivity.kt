@@ -55,7 +55,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        FoppalApplication.getInstance().newsList = listOf()
+        FoppalApplication.getInstance().newsList = mutableListOf()
         FoppalApplication.getInstance().englishNews = false
         when(item.itemId) {
             R.id.nav_item_norge_all -> {

@@ -8,12 +8,14 @@ import android.widget.TextView
 import com.foppal247.foppapp.R
 import com.foppal247.foppapp.domain.model.News
 import com.foppal247.foppapp.FoppalApplication
+import com.foppal247.foppapp.domain.NewsService
+import org.jetbrains.anko.doAsync
 
 
 class NewsAdapter (
-    val news: List<News>,
-    val onClick: (News) -> Unit) :
-        RecyclerView.Adapter<NewsAdapter.NewsViewHolder> () {
+    val news: MutableList<News>,
+    val onClick: (News) -> Unit
+    ) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder> () {
     class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tHeadline : TextView
         var tSourceUrl : TextView
@@ -35,7 +37,7 @@ class NewsAdapter (
         val news = news[position]
         val arrayDate = news.publishingDate.split('-', 'T')
         val arrayHour = arrayDate[3].split(":")
-        var dateString = ""
+        val dateString: String
         if(FoppalApplication.getInstance().country != "brazil") {
             dateString = "${arrayDate[2]}/${arrayDate[1]}/${arrayDate[0]} ${arrayHour[0]}:${arrayHour[1]}"
         } else {

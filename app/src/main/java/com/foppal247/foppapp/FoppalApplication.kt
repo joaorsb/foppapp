@@ -11,11 +11,14 @@ class FoppalApplication : Application() {
     var league: LeagueTypes? = LeagueTypes.all
     var country: String? = "norge"
     var footballTeams: MutableList<FootballTeam> = mutableListOf()
-    var newsList: List<News> = listOf()
+    var newsList: MutableList<News> = mutableListOf()
     var selectedIntlTeamName: String? = ""
     var selectedTeamName: String? = ""
     var menuGroupId = 0
+    var pageNumber = 1
     var englishNews: Boolean = false
+
+
     override fun onCreate() {
         super.onCreate()
         appInstance = this
@@ -25,7 +28,7 @@ class FoppalApplication : Application() {
         selectedIntlTeamName = ""
         selectedTeamName = ""
         footballTeams = mutableListOf()
-        newsList = listOf()
+        newsList = mutableListOf()
         englishNews = false
     }
 
