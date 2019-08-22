@@ -18,12 +18,14 @@ import com.foppal247.foppapp.FoppalApplication
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import androidx.recyclerview.widget.RecyclerView
+import org.jetbrains.anko.support.v4.runOnUiThread
+import org.jetbrains.anko.support.v4.toast
 
 
 class NewsFragment : BaseFragment() {
     private var newsList = listOf<News>()
     private var isLoading = false
-
+    val adapter = NewsAdapter { onClickNews(it) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
@@ -34,7 +36,6 @@ class NewsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, icicle: Bundle?) {
         super.onViewCreated(view, icicle)
-        super.checkConnection()
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
@@ -50,6 +51,18 @@ class NewsFragment : BaseFragment() {
             R.color.refresh_progress_2,
             R.color.refresh_progress_3
         )
+
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        checkConnection()
+        if(super.hasConnection && FoppalApplication.getInstance().newsList.isEmpty()) {
+            taskNews()
+        } else {
+            recyclerView.adapter = NewsAdapter { onClickNews(it) }
+            swipeFragment.isRefreshing = false
+        }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -61,24 +74,28 @@ class NewsFragment : BaseFragment() {
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0) {
                     if (!isLoading){
-//                        isLoading = true
-//                        FoppalApplication.getInstance().pageNumber++
-//                        taskNews()
+                        isLoading = true
+                        toast("Loading more news!")
+                        swipeFragment.isRefreshing = true
+                        Thread {
+                            //Do some Network Request
+                            FoppalApplication.getInstance().pageNumber++
+                            val newsList = NewsService.getMoreNews()
+                            runOnUiThread {
+                                var itemCount = adapter.itemCount
+                                newsList.forEach {
+                                    adapter.news.add(itemCount, it)
+                                    adapter.notifyDataSetChanged()
+                                    itemCount++
+                                }
+                            }
+                            isLoading = false
+                        }.start()
+                        swipeFragment.isRefreshing = false
                     }
                 }
             }
         })
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        checkConnection()
-        if(super.hasConnection && FoppalApplication.getInstance().newsList.isEmpty()) {
-            taskNews()
-        } else {
-            recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
-            swipeFragment.isRefreshing = false
-        }
 
     }
 
@@ -87,6 +104,7 @@ class NewsFragment : BaseFragment() {
         newsList = listOf()
         FoppalApplication.getInstance().selectedIntlTeamName = ""
         FoppalApplication.getInstance().selectedTeamName = ""
+        FoppalApplication.getInstance().pageNumber = 1
     }
 
     private fun taskNews(){
@@ -94,7 +112,8 @@ class NewsFragment : BaseFragment() {
             swipeFragment.isRefreshing = !swipeFragment.isRefreshing
             NewsService.getNews()
             uiThread {
-                recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
+                adapter.news = FoppalApplication.getInstance().newsList
+                recyclerView.adapter = adapter
                 swipeFragment.isRefreshing = false
                 isLoading = false
             }
