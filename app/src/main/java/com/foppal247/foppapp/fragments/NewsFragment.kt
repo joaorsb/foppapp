@@ -18,6 +18,7 @@ import com.foppal247.foppapp.FoppalApplication
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import androidx.recyclerview.widget.RecyclerView
+import com.foppal247.foppapp.utils.AndroidUtils
 import org.jetbrains.anko.support.v4.runOnUiThread
 import org.jetbrains.anko.support.v4.toast
 
@@ -25,6 +26,7 @@ import org.jetbrains.anko.support.v4.toast
 class NewsFragment : BaseFragment() {
     private var newsList = listOf<News>()
     private var isLoading = false
+    var checkHasConnection: Boolean = false
     val adapter = NewsAdapter { onClickNews(it) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +75,7 @@ class NewsFragment : BaseFragment() {
                 // Load more if we have reach the end to the recyclerView
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0) {
-                    if (!isLoading){
+                    if (!isLoading && AndroidUtils.isNetworkAvailable(context)){
                         isLoading = true
                         toast("Loading more news!")
                         swipeFragment.isRefreshing = true

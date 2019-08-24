@@ -13,8 +13,8 @@ android {
         applicationId "com.foppal247.foppapp"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 3
-        versionName "1.03.01"
+        versionCode 4
+        versionName "1.04.01"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
