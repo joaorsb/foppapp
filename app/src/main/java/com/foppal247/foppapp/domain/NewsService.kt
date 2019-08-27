@@ -9,7 +9,6 @@ import com.foppal247.foppapp.utils.LeagueHelper
 import java.net.URL
 
 object NewsService {
-    private const val TAG = "NewsService"
     private var page: Int = 1
     fun getAllNews(){
         val country = FoppalApplication.getInstance().country
@@ -89,7 +88,7 @@ object NewsService {
     }
 
     fun getMoreNews(): List<News> {
-        var listNews: List<News>
+        val listNews: List<News>
         if (FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()) {
             if (FoppalApplication.getInstance().league?.leagueName == R.string.all) {
                 listNews = getMoreAllNews()

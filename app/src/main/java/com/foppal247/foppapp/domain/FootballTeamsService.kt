@@ -1,28 +1,31 @@
 package com.foppal247.foppapp.domain
 
 import com.foppal247.foppapp.FoppalApplication
-import com.foppal247.foppapp.domain.dao.DatabaseManager
+import com.foppal247.foppapp.domain.dao.FavoriteTeamsDatabaseManager
+import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
+import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
 import com.foppal247.foppapp.extensions.fromJson
 import com.foppal247.foppapp.utils.HttpHelper
 import com.foppal247.foppapp.utils.LeagueHelper
+import org.jetbrains.anko.doAsync
 
 object FootballTeamsService {
     private const val TAG = "FootballTeamsService"
 
     fun getFootballTeams(): MutableList<FootballTeam> {
-        val dao = DatabaseManager.getFootballTeamsDAO()
+        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
         return dao.findAll()
     }
 
     fun getFootballTeamsByLeague(leagueId: Int?): MutableList<FootballTeam> {
-        val dao = DatabaseManager.getFootballTeamsDAO()
+        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
         return dao.getFootballTeamsByLeague(leagueId)
     }
 
     fun deleteFootballTeam(intlName: String) : Boolean{
-        val dao = DatabaseManager.getFootballTeamsDAO()
+        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
         val team = dao.getByIntlName(intlName)
         if (team != null){
             dao.delete(team)
@@ -39,4 +42,6 @@ object FootballTeamsService {
         val footballTeams = fromJson<List<Team>>(json)
         return footballTeams
     }
+
+
 }

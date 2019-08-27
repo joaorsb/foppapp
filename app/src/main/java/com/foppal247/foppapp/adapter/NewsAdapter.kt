@@ -10,9 +10,9 @@ import com.foppal247.foppapp.FoppalApplication
 import kotlinx.android.synthetic.main.adapter_news.view.*
 
 class NewsAdapter (
+    var news: MutableList<News>,
     val onClick: (News) -> Unit
     ) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder> () {
-    var news: MutableList<News> = mutableListOf()
 
     override fun getItemCount() = this.news.size
 

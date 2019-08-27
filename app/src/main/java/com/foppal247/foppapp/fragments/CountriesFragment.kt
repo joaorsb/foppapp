@@ -12,12 +12,10 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.R
-
 import kotlinx.android.synthetic.main.fragment_countries.*
 import com.foppal247.foppapp.adapter.CountryAdapter
-import com.foppal247.foppapp.domain.*
+import com.foppal247.foppapp.domain.CountryService
 import com.foppal247.foppapp.domain.model.Country
-import com.foppal247.foppapp.utils.FootballTeamsHelper
 import com.google.android.material.navigation.NavigationView
 
 
@@ -26,7 +24,7 @@ class CountriesFragment: BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
-        val view = inflater?.inflate(R.layout.fragment_countries, container, false)
+        val view = inflater.inflate(R.layout.fragment_countries, container, false)
         return view
     }
 
@@ -55,7 +53,7 @@ class CountriesFragment: BaseFragment() {
 
         navView?.menu?.forEach { item: MenuItem ->
             if (item.groupId == FoppalApplication.getInstance().menuGroupId) {
-                navView?.menu?.setGroupVisible(FoppalApplication.getInstance().menuGroupId, true)
+                navView.menu?.setGroupVisible(FoppalApplication.getInstance().menuGroupId, true)
             }
         }
 

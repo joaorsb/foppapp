@@ -13,7 +13,7 @@ import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.activity.NewsListActivity
 import com.foppal247.foppapp.adapter.TeamsAdapter
 import com.foppal247.foppapp.domain.FootballTeamsService
-import com.foppal247.foppapp.domain.dao.DatabaseManager
+import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
 import org.jetbrains.anko.doAsync
@@ -71,14 +71,14 @@ class TeamsFragment : BaseFragment() {
 
     private fun taskGetTeams(){
         doAsync {
-            swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
+                swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
                 teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
                 teamsList.forEach {team: Team -> run {
                         val footballTeam = FootballTeam()
                         footballTeam.intlName = team.intlName
                         footballTeam.teamName = team.teamName
                         footballTeam.league = FoppalApplication.getInstance().league?.leagueName
-                        val dao = DatabaseManager.getFootballTeamsDAO()
+                        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
                         dao.insert(footballTeam)
                         FoppalApplication.getInstance().footballTeams.add(footballTeam)
                     }

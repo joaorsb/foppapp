@@ -42,4 +42,32 @@
     <string name="eliteserien_teams">Eliteserien Teams</string>
     <string name="site_fp" translatable="false">foppal247.com</string>
     <string name="all_en">News in English</string>
+    <string name="favorite">Favorite</string>
+    <string name="eliteserien_all_teams">Eliteserien All team news</string>
+    <string name="eliteserien_teams_news">Choose Eliteserien Team</string>
+    <string name="obos_all_teams_news">OBOS-ligaen all teams news</string>
+    <string name="obos_teams_news">Choose OBOS-Ligaen team</string>
+    <string name="postnord_all_news">PostNord-Ligaen All teams news</string>
+    <string name="postnord_teams_news">Choose PostNord-Ligaen team</string>
+    <string name="brasileirao_news">Brasileirão all news</string>
+    <string name="brasileirao_teams_news">Choose Brasileirão team</string>
+    <string name="serieb_news">Brasil Série B news</string>
+    <string name="serieb_teams_news">Choose Série B team</string>
+    <string name="all_en_espana">All Spain news in English</string>
+    <string name="laliga_news">All La Liga news</string>
+    <string name="laliga_teams_news">Choose La Liga team</string>
+    <string name="laliga2_news">All La Liga 2 news</string>
+    <string name="laliga2_teams_news">Choose La Liga 2 team</string>
+    <string name="allsvenskan_news">All Allsvenskan news</string>
+    <string name="allsvenskan_teams_news">Choose Allsvenskan team</string>
+    <string name="all_en_nederland">All Netherlands news in English</string>
+    <string name="eredivisie_news">All Eredivisie news</string>
+    <string name="eredivisie_teams_news">Choose Eredivisie team</string>
+    <string name="all_en_deutschland">All Germany news in English</string>
+    <string name="bundesliga_news">All Bundesliga news</string>
+    <string name="bundesliga_teams_news">Choose Bundesliga team</string>
+    <string name="bundesliga2_news">All 2. Bundesliga news</string>
+    <string name="bundesliga2_teams_news">Choose 2. Bundesliga team</string>
+    <string name="getting_more_news">Loading more news!</string>
+    <string name="favorite_added">Team added to Favorites list!</string>
 </resources>

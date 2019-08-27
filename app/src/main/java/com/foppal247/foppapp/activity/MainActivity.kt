@@ -6,9 +6,10 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
-import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.domain.FootballTeamsService
+import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.google.android.material.navigation.NavigationView
 import com.foppal247.foppapp.domain.model.LeagueTypes
@@ -18,6 +19,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.doAsync
+import com.pusher.client.channel.SubscriptionEventListener
+import com.pusher.client.Pusher
+import androidx.core.app.ComponentActivity
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.foppal247.foppapp.fragments.FavoritesFragment
+import com.pusher.client.PusherOptions
+import kotlinx.android.synthetic.main.fragment_teams.*
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -29,18 +41,24 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupNavDrawer()
         if(icicle == null){
             addFragment(R.id.countriesContainer, CountriesFragment())
+            if( ! foppalInstance.favoriteTeams.isNullOrEmpty()){
+                addFragment(R.id.favoritesContainer, FavoritesFragment())
+            }
         }
+
     }
 
     override fun onResume() {
         super.onResume()
         nav_view.menu.forEach { item: MenuItem ->  item.isVisible = false}
         nav_view.menu.forEach { item: MenuItem ->
-            if (item.groupId == FoppalApplication.getInstance().menuGroupId) {
-                nav_view.menu.setGroupVisible(FoppalApplication.getInstance().menuGroupId, true)
+            if (item.groupId == foppalInstance.menuGroupId) {
+                nav_view.menu.setGroupVisible(foppalInstance.menuGroupId, true)
+
             }
         }
     }
+
 
     private fun setupNavDrawer() {
         val toggle = ActionBarDrawerToggle(
@@ -55,47 +73,19 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        FoppalApplication.getInstance().newsList = mutableListOf()
-        FoppalApplication.getInstance().englishNews = false
+        foppalInstance.newsList = mutableListOf()
+        foppalInstance.englishNews = false
         when(item.itemId) {
-            R.id.nav_item_norge_all -> {
+            R.id.nav_item_norge_all, R.id.nav_item_brasil_all,
+            R.id.nav_item_deutschland_all, R.id.nav_item_espana_all,
+            R.id.nav_item_nederland_all, R.id.nav_item_sverige_all -> {
                 foppalInstance.league = LeagueTypes.all
                 startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
             }
-            R.id.nav_item_brasil_all -> {
-                foppalInstance.league = LeagueTypes.all
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-            R.id.nav_item_deutschland_all -> {
-                foppalInstance.league = LeagueTypes.all
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-            R.id.nav_item_espana_all -> {
-                foppalInstance.league = LeagueTypes.all
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-            R.id.nav_item_nederland_all -> {
-                foppalInstance.league = LeagueTypes.all
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-
-            R.id.nav_item_deutschland_all_en -> {
-                foppalInstance.league = LeagueTypes.all
-                FoppalApplication.getInstance().englishNews = true
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-            R.id.nav_item_espana_all_en -> {
-                foppalInstance.league = LeagueTypes.all
-                FoppalApplication.getInstance().englishNews = true
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
+            R.id.nav_item_deutschland_all_en, R.id.nav_item_espana_all_en,
             R.id.nav_item_nederland_all_en -> {
                 foppalInstance.league = LeagueTypes.all
-                FoppalApplication.getInstance().englishNews = true
-                startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
-            }
-            R.id.nav_item_sverige_all -> {
-                foppalInstance.league = LeagueTypes.all
+                foppalInstance.englishNews = true
                 startActivity<NewsListActivity>("leagueType" to LeagueTypes.all)
             }
             R.id.nav_item_eliteserien -> {
@@ -214,8 +204,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     fun taskGetLocalTeams() {
         doAsync {
-            FoppalApplication.getInstance().footballTeams =
-                FootballTeamsService.getFootballTeamsByLeague(FoppalApplication.getInstance().league?.leagueName)
+            foppalInstance.footballTeams =
+                FootballTeamsService.getFootballTeamsByLeague(foppalInstance.league?.leagueName)
         }
     }
 }

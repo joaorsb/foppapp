@@ -1,22 +1,26 @@
 package com.foppal247.foppapp
 
 import android.app.Application
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.LeagueTypes
 import com.foppal247.foppapp.domain.model.News
-import java.lang.IllegalStateException
 
 class FoppalApplication : Application() {
-    private val TAG = "FoppalApplication"
     var league: LeagueTypes? = LeagueTypes.all
     var country: String? = "norge"
     var footballTeams: MutableList<FootballTeam> = mutableListOf()
+    var favoriteTeams: List<FavoriteTeam> = listOf()
     var newsList: MutableList<News> = mutableListOf()
     var selectedIntlTeamName: String? = ""
     var selectedTeamName: String? = ""
     var menuGroupId = 0
     var pageNumber = 1
     var englishNews: Boolean = false
+    val pusherCluster = "us2"
+    val pusherKey = "f02a86d7e2321f93cdbf"
 
 
     override fun onCreate() {
@@ -24,7 +28,7 @@ class FoppalApplication : Application() {
         appInstance = this
     }
 
-    fun clearAllData(){
+    private fun clearAllData(){
         selectedIntlTeamName = ""
         selectedTeamName = ""
         footballTeams = mutableListOf()
@@ -35,9 +39,7 @@ class FoppalApplication : Application() {
     companion object {
         private var appInstance: FoppalApplication? = null
         fun getInstance(): FoppalApplication {
-            if (appInstance == null) {
-                throw IllegalStateException("Configure a classe de Application no AndroidManifest.xml")
-            }
+            checkNotNull(appInstance) { "Configure a classe de Application no AndroidManifest.xml" }
             return appInstance!!
         }
     }
@@ -45,5 +47,6 @@ class FoppalApplication : Application() {
 
     override fun onTerminate() {
         super.onTerminate()
+        clearAllData()
     }
 }

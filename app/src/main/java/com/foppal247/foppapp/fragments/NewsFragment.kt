@@ -24,10 +24,8 @@ import org.jetbrains.anko.support.v4.toast
 
 
 class NewsFragment : BaseFragment() {
-    private var newsList = listOf<News>()
     private var isLoading = false
-    var checkHasConnection: Boolean = false
-    val adapter = NewsAdapter { onClickNews(it) }
+    val adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
@@ -62,7 +60,7 @@ class NewsFragment : BaseFragment() {
         if(super.hasConnection && FoppalApplication.getInstance().newsList.isEmpty()) {
             taskNews()
         } else {
-            recyclerView.adapter = NewsAdapter { onClickNews(it) }
+            recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
             swipeFragment.isRefreshing = false
         }
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -77,10 +75,9 @@ class NewsFragment : BaseFragment() {
                     && firstVisibleItemPosition >= 0) {
                     if (!isLoading && AndroidUtils.isNetworkAvailable(context)){
                         isLoading = true
-                        toast("Loading more news!")
+                        toast(getString(R.string.getting_more_news))
                         swipeFragment.isRefreshing = true
                         Thread {
-                            //Do some Network Request
                             FoppalApplication.getInstance().pageNumber++
                             val newsList = NewsService.getMoreNews()
                             runOnUiThread {
@@ -103,7 +100,6 @@ class NewsFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        newsList = listOf()
         FoppalApplication.getInstance().selectedIntlTeamName = ""
         FoppalApplication.getInstance().selectedTeamName = ""
         FoppalApplication.getInstance().pageNumber = 1

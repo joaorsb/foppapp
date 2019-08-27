@@ -4,124 +4,147 @@
       android:layout_width="wrap_content"
       android:layout_height="match_parent">
 
-    <group android:checkableBehavior="single" android:id="@+id/groupNorge">
-
-        <item
-            android:id="@+id/nav_item_norge_all"
-            android:title="@string/all"
-        />
-        <item
-            android:id="@+id/nav_item_eliteserien"
-            android:title="@string/eliteserien"/>
-        <item
-                android:id="@+id/nav_item_eliteserien_teams"
-                android:title="@string/eliteserien_teams"/>
-        <item
-            android:id="@+id/nav_item_obos"
-            android:title="@string/obos"/>
-        <item
-                android:id="@+id/nav_item_obos_teams"
-                android:title="@string/obos_teams"/>
-        <item
-            android:id="@+id/nav_item_postnord"
-            android:title="@string/postnord"/>
-        <item
-                android:id="@+id/nav_item_postnord_teams"
-                android:title="@string/postnord_teams"/>
+    <group
+            android:checkableBehavior="single"
+            android:id="@+id/groupNorge">
+        <item android:title="@string/norge">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_norge_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_eliteserien"
+                        android:title="@string/eliteserien_all_teams"/>
+                <item
+                        android:id="@+id/nav_item_eliteserien_teams"
+                        android:title="@string/eliteserien_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_obos"
+                        android:title="@string/obos_all_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_obos_teams"
+                        android:title="@string/obos_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_postnord"
+                        android:title="@string/postnord_all_news"/>
+                <item
+                        android:id="@+id/nav_item_postnord_teams"
+                        android:title="@string/postnord_teams_news"/>
+            </menu>
+        </item>
 
     </group>
     <group android:checkableBehavior="single" android:id="@+id/groupBrasil">
+        <item
+            android:title="@string/brasil">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_brasil_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_brasileirao"
+                        android:title="@string/brasileirao_news"/>
+                <item
+                        android:id="@+id/nav_item_brasileirao_teams"
+                        android:title="@string/brasileirao_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_serieb"
+                        android:title="@string/serieb_news"/>
+                <item
+                        android:id="@+id/nav_item_serieb_teams"
+                        android:title="@string/serieb_teams_news"/>
+            </menu>
+        </item>
 
-        <item
-                android:id="@+id/nav_item_brasil_all"
-                android:title="@string/all"/>
-        <item
-                android:id="@+id/nav_item_brasileirao"
-                android:title="@string/brasileirao"/>
-        <item
-                android:id="@+id/nav_item_brasileirao_teams"
-                android:title="@string/brasileirao_teams"/>
-        <item
-                android:id="@+id/nav_item_serieb"
-                android:title="@string/serieb"/>
-        <item
-                android:id="@+id/nav_item_serieb_teams"
-                android:title="@string/serieb_teams"/>
 
     </group>
     <group android:checkableBehavior="single" android:id="@+id/groupEspana">
-
         <item
-                android:id="@+id/nav_item_espana_all"
-                android:title="@string/all"/>
-        <item
-                android:id="@+id/nav_item_espana_all_en"
-                android:title="@string/all_en"/>
-        <item
-                android:id="@+id/nav_item_laliga"
-                android:title="@string/laliga"/>
-        <item
-                android:id="@+id/nav_item_laliga_teams"
-                android:title="@string/laliga_teams"/>
-        <item
-                android:id="@+id/nav_item_laliga2"
-                android:title="@string/laliga2"/>
-        <item
-                android:id="@+id/nav_item_laliga2_teams"
-                android:title="@string/laliga2_teams"/>
+                android:title="@string/espana">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_espana_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_espana_all_en"
+                        android:title="@string/all_en"/>
+                <item
+                        android:id="@+id/nav_item_laliga"
+                        android:title="@string/laliga_news"/>
+                <item
+                        android:id="@+id/nav_item_laliga_teams"
+                        android:title="@string/laliga_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_laliga2"
+                        android:title="@string/laliga2_news"/>
+                <item
+                        android:id="@+id/nav_item_laliga2_teams"
+                        android:title="@string/laliga2_teams_news"/>
+            </menu>
+        </item>
 
     </group>
     <group android:checkableBehavior="single" android:id="@+id/groupSverige">
-
         <item
-                android:id="@+id/nav_item_sverige_all"
-                android:title="@string/all"/>
-        <item
-                android:id="@+id/nav_item_allsvenskan"
-                android:title="@string/allsvenskan"/>
-        <item
-                android:id="@+id/nav_item_allsvenskan_teams"
-                android:title="@string/allsvenskan_teams"/>
+                android:title="@string/sverige">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_sverige_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_allsvenskan"
+                        android:title="@string/allsvenskan_news"/>
+                <item
+                        android:id="@+id/nav_item_allsvenskan_teams"
+                        android:title="@string/allsvenskan_teams_news"/>
+            </menu>
+        </item>
 
     </group>
     <group android:checkableBehavior="single" android:id="@+id/groupNederland">
-
         <item
-                android:id="@+id/nav_item_nederland_all"
-                android:title="@string/all"/>
-        <item
-                android:id="@+id/nav_item_nederland_all_en"
-                android:title="@string/all_en"/>
-        <item
-                android:id="@+id/nav_item_eredivisie"
-                android:title="@string/eredivisie"/>
-        <item
-                android:id="@+id/nav_item_eredivisie_teams"
-                android:title="@string/eredivisie_teams"/>
+                android:title="@string/nederland">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_nederland_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_nederland_all_en"
+                        android:title="@string/all_en"/>
+                <item
+                        android:id="@+id/nav_item_eredivisie"
+                        android:title="@string/eredivisie_news"/>
+                <item
+                        android:id="@+id/nav_item_eredivisie_teams"
+                        android:title="@string/eredivisie_teams_news"/>
+            </menu>
+        </item>
 
     </group>
     <group android:checkableBehavior="single" android:id="@+id/groupDeutschland">
+        <item
+                android:title="@string/deutschland">
+            <menu>
+                <item
+                        android:id="@+id/nav_item_deutschland_all"
+                        android:title="@string/all"/>
+                <item
+                        android:id="@+id/nav_item_deutschland_all_en"
+                        android:title="@string/all_en"/>
+                <item
+                        android:id="@+id/nav_item_bundesliga"
+                        android:title="@string/bundesliga_news"/>
+                <item
+                        android:id="@+id/nav_item_bundesliga_teams"
+                        android:title="@string/bundesliga_teams_news"/>
+                <item
+                        android:id="@+id/nav_item_bundesliga2"
+                        android:title="@string/bundesliga2_news"/>
 
-        <item
-                android:id="@+id/nav_item_deutschland_all"
-                android:title="@string/all"/>
-        <item
-                android:id="@+id/nav_item_deutschland_all_en"
-                android:title="@string/all_en"/>
-        <item
-                android:id="@+id/nav_item_bundesliga"
-                android:title="@string/bundesliga"/>
-        <item
-                android:id="@+id/nav_item_bundesliga_teams"
-                android:title="@string/bundesliga_teams"/>
-        <item
-                android:id="@+id/nav_item_bundesliga2"
-                android:title="@string/bundesliga2"/>
-
-        <item
-                android:id="@+id/nav_item_bundesliga2_teams"
-                android:title="@string/bundesliga2_teams"/>
-
+                <item
+                        android:id="@+id/nav_item_bundesliga2_teams"
+                        android:title="@string/bundesliga2_teams_news"/>
+            </menu>
+        </item>
     </group>
-
 </menu>
