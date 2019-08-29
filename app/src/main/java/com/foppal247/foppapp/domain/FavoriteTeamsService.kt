@@ -7,6 +7,7 @@ import com.foppal247.foppapp.domain.dao.FavoriteTeamsDatabaseManager
 import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.extensions.FavoriteEvent
+import com.google.firebase.messaging.FirebaseMessaging
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -14,7 +15,7 @@ import org.jetbrains.anko.uiThread
 object FavoriteTeamsService {
     private val dao = FavoriteTeamsDatabaseManager.getFavoriteTeamsDAO()
 
-    fun getFavoriteTeams(): List<FavoriteTeam> {
+    fun getFavoriteTeams(): MutableList<FavoriteTeam> {
         return dao.findAll()
     }
 
@@ -31,9 +32,23 @@ object FavoriteTeamsService {
         doAsync {
             uiThread {
                 EventBus.getDefault().post(FavoriteEvent(favorite))
+                FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
+                    .addOnCompleteListener { task ->
+                    }
             }
         }
+    }
 
+    fun deleteFavorite(favoriteTeam: FavoriteTeam){
+        doAsync {
+            dao.delete(favoriteTeam)
+            uiThread {
+                EventBus.getDefault().post(FavoriteEvent(favoriteTeam))
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(favoriteTeam.intlName)
+                    .addOnCompleteListener { task ->
+                    }
+            }
+        }
     }
 
 }

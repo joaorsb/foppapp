@@ -34,6 +34,19 @@ object FootballTeamsService {
         return false
     }
 
+    fun deleteAllFootballTeams() {
+        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
+        dao.deleteAll()
+    }
+
+    fun deleteAllFootballTeamsByLeague(league: Int) {
+        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
+        val teams = dao.getFootballTeamsByLeague(league)
+        teams.forEach {
+            deleteFootballTeam(it.intlName)
+        }
+    }
+
     fun getFootballTeamsByLeagueREST() : List<Team>{
         val country = FoppalApplication.getInstance().country
         val leagueName = LeagueHelper.getLeagueName()

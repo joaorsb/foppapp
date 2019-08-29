@@ -7,9 +7,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.drawerlayout.widget.DrawerLayout
 import com.foppal247.foppapp.R
-import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.domain.FootballTeamsService
-import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.google.android.material.navigation.NavigationView
 import com.foppal247.foppapp.domain.model.LeagueTypes
@@ -19,17 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import org.jetbrains.anko.doAsync
-import com.pusher.client.channel.SubscriptionEventListener
-import com.pusher.client.Pusher
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.foppal247.foppapp.fragments.FavoritesFragment
-import com.pusher.client.PusherOptions
-import kotlinx.android.synthetic.main.fragment_teams.*
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -45,7 +33,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
                 addFragment(R.id.favoritesContainer, FavoritesFragment())
             }
         }
-
     }
 
     override fun onResume() {
@@ -54,7 +41,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         nav_view.menu.forEach { item: MenuItem ->
             if (item.groupId == foppalInstance.menuGroupId) {
                 nav_view.menu.setGroupVisible(foppalInstance.menuGroupId, true)
-
             }
         }
     }

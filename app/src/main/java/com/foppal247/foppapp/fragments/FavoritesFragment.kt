@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.foppal247.foppapp.R
 import kotlinx.android.synthetic.main.fragment_favorites.*
 import com.foppal247.foppapp.FoppalApplication
@@ -19,8 +21,12 @@ import com.foppal247.foppapp.extensions.FavoriteEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.support.v4.startActivity
+import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.yesButton
 
 
 class FavoritesFragment: BaseFragment() {
@@ -43,6 +49,8 @@ class FavoritesFragment: BaseFragment() {
         recyclerViewFavorites.layoutManager = LinearLayoutManager(activity)
         recyclerViewFavorites.itemAnimator = DefaultItemAnimator()
         recyclerViewFavorites.setHasFixedSize(true)
+
+
 
     }
 
@@ -69,20 +77,45 @@ class FavoritesFragment: BaseFragment() {
                FoppalApplication.getInstance().favoriteTeams = FavoriteTeamsService.getFavoriteTeams()
             uiThread {
                 recyclerViewFavorites.adapter = FavoriteTeamsAdapter(FoppalApplication.getInstance().favoriteTeams) { onClickTeam(it)}
+                setupSwipeToDelete()
             }
         }
 
     }
 
-    fun onClickTeam(team: FavoriteTeam) {
+    private fun onClickTeam(team: FavoriteTeam) {
         FoppalApplication.getInstance().englishNews = false
         FoppalApplication.getInstance().newsList = mutableListOf()
-
         FoppalApplication.getInstance().selectedIntlTeamName = team.intlName
         FoppalApplication.getInstance().selectedTeamName = team.teamName
         FoppalApplication.getInstance().country = team.country
         startActivity<NewsListActivity>("leagueType" to FoppalApplication.getInstance().league)
     }
 
+    private fun setupSwipeToDelete() {
+        val itemTouchHelperCallback = object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
+                alert("Deseja excluir dos favoritos?", "Excluir") {
+                    yesButton {
+                        (recyclerViewFavorites.adapter as FavoriteTeamsAdapter).removeItem(viewHolder)
+                        toast("Time excluído com sucesso")
+                    }
+                    noButton {
+                        recyclerViewFavorites.adapter?.notifyDataSetChanged()
+                        toast("Ação cancelada")
+                    }
+                }.show()
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerViewFavorites)
+    }
 }

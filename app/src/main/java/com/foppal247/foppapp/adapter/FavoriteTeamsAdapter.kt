@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.domain.model.FavoriteTeam
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
 
 class FavoriteTeamsAdapter(
-    var favoriteTeams: List<FavoriteTeam>,
+    var favoriteTeams: MutableList<FavoriteTeam>,
     val onClick: (FavoriteTeam) -> Unit
 ) : RecyclerView.Adapter<FavoriteTeamsAdapter.FavoriteTeamsViewHolder> () {
     class FavoriteTeamsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -30,6 +34,14 @@ class FavoriteTeamsAdapter(
         holder.tFavoriteTeamName.text = favorite.teamName
 
         holder.itemView.setOnClickListener { onClick(favorite)}
+    }
+
+    fun removeItem(holder: RecyclerView.ViewHolder){
+        val position = holder.adapterPosition
+        val favoriteTeam = favoriteTeams[position]
+        FavoriteTeamsService.deleteFavorite(favoriteTeam)
+        favoriteTeams.removeAt(holder.adapterPosition)
+        notifyItemRemoved(holder.adapterPosition)
     }
 }
 

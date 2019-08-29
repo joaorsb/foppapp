@@ -16,10 +16,10 @@ interface FavoriteTeamsDAO {
     fun getByIntlName(intlName: String): FavoriteTeam?
 
     @Query("SELECT * from favorite_teams where league = :leagueId")
-    fun getFootballTeamsByLeague(leagueId: Int?): List<FavoriteTeam>
+    fun getFootballTeamsByLeague(leagueId: Int?): MutableList<FavoriteTeam>
 
     @Query("Select * from favorite_teams")
-    fun findAll(): List<FavoriteTeam>
+    fun findAll(): MutableList<FavoriteTeam>
 
     @Insert
     fun insert(favoriteTeam: FavoriteTeam)

@@ -25,4 +25,7 @@ interface FootballTeamDAO {
 
     @Delete
     fun delete(footballTeam: FootballTeam)
+
+    @Query("DELETE FROM football_team")
+    fun deleteAll()
 }
