@@ -71,5 +71,5 @@
     <string name="exclude_cancelled">Ação cancelada</string>
     <string name="exclude_favorite">Deseja excluir dos favoritos?</string>
     <string name="exclude_title">Excluir?</string>
-    <string name="excluded_success">Escluido com sucesso</string>
+    <string name="excluded_success">Excluído com sucesso</string>
 </resources>

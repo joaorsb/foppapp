@@ -2,18 +2,34 @@ package com.foppal247.foppapp.extensions
 
 import android.content.Intent
 import android.util.Log
+import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.activity.MainActivity
+import com.foppal247.foppapp.activity.NewsListActivity
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import org.jetbrains.anko.support.v4.startActivity
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     private val TAG = "FirebaseMessage"
-    override fun onMessageReceived(p0: RemoteMessage) {
-        super.onMessageReceived(p0)
-        val intent = Intent(this, MainActivity::class.java)
+    override fun onMessageReceived(messageReceived: RemoteMessage) {
+        super.onMessageReceived(messageReceived)
+        lateinit var intent: Intent
+        if(messageReceived.data.isNotEmpty()) {
+            val data = messageReceived.data
+            FoppalApplication.getInstance().country = data.get("country")
+            FoppalApplication.getInstance().selectedIntlTeamName = data["intlName"]
+            FoppalApplication.getInstance().englishNews = false
+            FoppalApplication.getInstance().newsList = mutableListOf()
+            FoppalApplication.getInstance().selectedTeamName = data["intlName"]
+            intent = Intent(this, NewsListActivity::class.java)
+
+        } else {
+            intent = Intent(this, MainActivity::class.java)
+        }
+
         NotificationUtil.create(this, 1, intent,
-            p0.notification?.title as String, p0.notification?.body as String )
+            messageReceived.notification?.title as String, messageReceived.notification?.body as String )
     }
 
     override fun onNewToken(token: String) {

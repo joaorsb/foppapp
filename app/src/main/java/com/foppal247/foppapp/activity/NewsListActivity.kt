@@ -19,7 +19,11 @@ class NewsListActivity : BaseActivity() {
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
         setContentView(R.layout.activity_news_list)
-        val league = intent.getSerializableExtra("leagueType") as LeagueTypes
+        lateinit var league: LeagueTypes
+
+        if(intent.getSerializableExtra("leagueType") != null){
+            league = intent.getSerializableExtra("leagueType") as LeagueTypes
+        }
         val title: String
 
         if(FoppalApplication.getInstance().selectedIntlTeamName.isNullOrBlank()){
