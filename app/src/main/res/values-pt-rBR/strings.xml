@@ -68,4 +68,8 @@
     <string name="allsvenskan_news">Notícias da Allsvenskan</string>
     <string name="favorite_added">Time adicionado aos favoritos!</string>
     <string name="getting_more_news">Carregando mais notícias!</string>
+    <string name="exclude_cancelled">Ação cancelada</string>
+    <string name="exclude_favorite">Deseja excluir dos favoritos?</string>
+    <string name="exclude_title">Excluir?</string>
+    <string name="excluded_success">Escluido com sucesso</string>
 </resources>

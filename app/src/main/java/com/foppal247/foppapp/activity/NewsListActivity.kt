@@ -7,14 +7,11 @@ import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.model.LeagueTypes
 import com.foppal247.foppapp.R
 import com.foppal247.foppapp.domain.FavoriteTeamsService
-import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.extensions.addFragment
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.foppal247.foppapp.extensions.toast
 import com.foppal247.foppapp.fragments.NewsFragment
-import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 
 class NewsListActivity : BaseActivity() {

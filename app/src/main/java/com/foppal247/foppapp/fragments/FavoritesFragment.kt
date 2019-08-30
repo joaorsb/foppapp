@@ -49,9 +49,6 @@ class FavoritesFragment: BaseFragment() {
         recyclerViewFavorites.layoutManager = LinearLayoutManager(activity)
         recyclerViewFavorites.itemAnimator = DefaultItemAnimator()
         recyclerViewFavorites.setHasFixedSize(true)
-
-
-
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -103,14 +100,14 @@ class FavoritesFragment: BaseFragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, position: Int) {
-                alert("Deseja excluir dos favoritos?", "Excluir") {
+                alert(context?.getText(R.string.exclude_favorite) as String, context?.getText(R.string.exclude_title) as String) {
                     yesButton {
                         (recyclerViewFavorites.adapter as FavoriteTeamsAdapter).removeItem(viewHolder)
-                        toast("Time excluído com sucesso")
+                        toast(context?.getText(R.string.excluded_success) as String)
                     }
                     noButton {
                         recyclerViewFavorites.adapter?.notifyDataSetChanged()
-                        toast("Ação cancelada")
+                        toast(context?.getText(R.string.exclude_cancelled) as String)
                     }
                 }.show()
             }

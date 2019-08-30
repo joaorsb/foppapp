@@ -29,9 +29,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupNavDrawer()
         if(icicle == null){
             addFragment(R.id.countriesContainer, CountriesFragment())
-            if( ! foppalInstance.favoriteTeams.isNullOrEmpty()){
-                addFragment(R.id.favoritesContainer, FavoritesFragment())
-            }
+            addFragment(R.id.favoritesContainer, FavoritesFragment())
         }
     }
 
@@ -44,7 +42,6 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
     }
-
 
     private fun setupNavDrawer() {
         val toggle = ActionBarDrawerToggle(
@@ -188,7 +185,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         }
     }
 
-    fun taskGetLocalTeams() {
+    private fun taskGetLocalTeams() {
         doAsync {
             foppalInstance.footballTeams =
                 FootballTeamsService.getFootballTeamsByLeague(foppalInstance.league?.leagueName)

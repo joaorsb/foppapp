@@ -70,4 +70,8 @@
     <string name="bundesliga2_teams_news">Choose 2. Bundesliga team</string>
     <string name="getting_more_news">Loading more news!</string>
     <string name="favorite_added">Team added to Favorites list!</string>
+    <string name="exclude_favorite">Do you want to exclude from favorites?</string>
+    <string name="exclude_title">Exclude?</string>
+    <string name="excluded_success">Excluded with success</string>
+    <string name="exclude_cancelled">Action canceled</string>
 </resources>
