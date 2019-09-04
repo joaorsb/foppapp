@@ -85,19 +85,23 @@ class NewsFragment : BaseFragment() {
                         isLoading = true
                         toast(getString(R.string.getting_more_news))
                         swipeFragment.isRefreshing = true
-                        Thread {
-                            FoppalApplication.getInstance().pageNumber++
-                            val newsList = NewsService.getMoreNews()
-                            runOnUiThread {
-                                var itemCount = adapter.itemCount
-                                newsList.forEach {
-                                    adapter.news.add(itemCount, it)
-                                    adapter.notifyDataSetChanged()
-                                    itemCount++
+                        job = Job()
+                        job.let { thisJob ->
+                            CoroutineScope(IO + thisJob).launch {
+                                FoppalApplication.getInstance().pageNumber++
+                                val newsList = NewsService.getMoreNews()
+                                withContext(Main) {
+                                    var itemCount = adapter.itemCount
+                                    newsList.forEach {
+                                        adapter.news.add(itemCount, it)
+                                        adapter.notifyDataSetChanged()
+                                        itemCount++
+                                        job.complete()
+                                    }
                                 }
+                                isLoading = false
                             }
-                            isLoading = false
-                        }.start()
+                        }
                         swipeFragment.isRefreshing = false
                     }
                 }
@@ -125,6 +129,7 @@ class NewsFragment : BaseFragment() {
                     recyclerView.adapter = adapter
                     swipeFragment.isRefreshing = false
                     isLoading = false
+                    job.complete()
                 }
             }
 
