@@ -47,7 +47,7 @@ class CountriesFragment: BaseFragment() {
 
     private fun onClickCountry(country: Country) {
         val navView = activity?.findViewById<NavigationView>(R.id.nav_view)
-        FoppalApplication.getInstance().country = country.countryAPIName
+        FoppalApplication.getInstance().country = country.countryAPIName as String
         FoppalApplication.getInstance().menuGroupId = country.menuGroupId
         navView?.menu?.forEach { item: MenuItem ->  item.isVisible = false}
 

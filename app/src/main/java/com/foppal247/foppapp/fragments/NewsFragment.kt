@@ -14,17 +14,25 @@ import com.foppal247.foppapp.domain.NewsService
 import kotlinx.android.synthetic.main.fragment_news.*
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.foppal247.foppapp.FoppalApplication
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import androidx.recyclerview.widget.RecyclerView
+import com.foppal247.foppapp.domain.NewsRepository
 import com.foppal247.foppapp.utils.AndroidUtils
+import com.foppal247.foppapp.viewModels.NewsViewModel
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import org.jetbrains.anko.support.v4.runOnUiThread
 import org.jetbrains.anko.support.v4.toast
 
 
 class NewsFragment : BaseFragment() {
     private var isLoading = false
+    lateinit var job: CompletableJob
     val adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -103,18 +111,23 @@ class NewsFragment : BaseFragment() {
         FoppalApplication.getInstance().selectedIntlTeamName = ""
         FoppalApplication.getInstance().selectedTeamName = ""
         FoppalApplication.getInstance().pageNumber = 1
+        job.cancel()
     }
 
     private fun taskNews(){
-        doAsync {
-            swipeFragment.isRefreshing = !swipeFragment.isRefreshing
-            NewsService.getNews()
-            uiThread {
-                adapter.news = FoppalApplication.getInstance().newsList
-                recyclerView.adapter = adapter
-                swipeFragment.isRefreshing = false
-                isLoading = false
+        job = Job()
+        job.let { thisJob ->
+            CoroutineScope(IO + thisJob).launch {
+                swipeFragment.isRefreshing = !swipeFragment.isRefreshing
+                NewsService.getNews()
+                withContext(Main) {
+                    adapter.news = FoppalApplication.getInstance().newsList
+                    recyclerView.adapter = adapter
+                    swipeFragment.isRefreshing = false
+                    isLoading = false
+                }
             }
+
         }
     }
 

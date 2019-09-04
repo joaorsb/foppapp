@@ -17,7 +17,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         lateinit var intent: Intent
         if(messageReceived.data.isNotEmpty()) {
             val data = messageReceived.data
-            FoppalApplication.getInstance().country = data.get("country")
+            FoppalApplication.getInstance().country = data.get("country") as String
             FoppalApplication.getInstance().selectedIntlTeamName = data["intlName"]
             FoppalApplication.getInstance().englishNews = false
             FoppalApplication.getInstance().newsList = mutableListOf()
