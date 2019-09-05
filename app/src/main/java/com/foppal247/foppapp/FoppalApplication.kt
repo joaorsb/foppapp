@@ -13,8 +13,8 @@ class FoppalApplication : Application() {
     var footballTeams: MutableList<FootballTeam> = mutableListOf()
     var favoriteTeams: MutableList<FavoriteTeam> = mutableListOf()
     var newsList: MutableList<News> = mutableListOf()
-    var selectedIntlTeamName: String? = ""
-    var selectedTeamName: String? = ""
+    var selectedIntlTeamName: String = ""
+    var selectedTeamName: String = ""
     var menuGroupId = 0
     var pageNumber = 1
     var englishNews: Boolean = false

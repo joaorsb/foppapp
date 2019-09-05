@@ -12,7 +12,7 @@ open class BaseFragment : Fragment() {
         if (AndroidUtils.isNetworkAvailable(context)) {
             hasConnection = true
         } else {
-            var errorMessage = context?.getText(R.string.noInternet)
+            val errorMessage = context?.getText(R.string.noInternet)
             toast(errorMessage!!)
         }
     }

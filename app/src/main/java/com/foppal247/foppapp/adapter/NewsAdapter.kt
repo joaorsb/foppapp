@@ -16,6 +16,19 @@ class NewsAdapter (
 
     override fun getItemCount() = this.news.size
 
+    fun setNewsData(data: MutableList<News>){
+        news = data
+        notifyDataSetChanged()
+    }
+    fun addNewsData(data: MutableList<News>){
+        var position = itemCount
+        data.forEach{
+            news.add(itemCount, it)
+            notifyDataSetChanged()
+            position++
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_news, parent, false)
         val holder = NewsViewHolder(view)

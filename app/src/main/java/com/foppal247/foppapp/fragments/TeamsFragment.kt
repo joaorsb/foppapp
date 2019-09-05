@@ -16,6 +16,9 @@ import com.foppal247.foppapp.domain.FootballTeamsService
 import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
 import org.jetbrains.anko.uiThread
@@ -23,6 +26,7 @@ import org.jetbrains.anko.uiThread
 
 class TeamsFragment : BaseFragment() {
     private var teamsList = listOf<Team>()
+    private var job: CompletableJob? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
@@ -53,7 +57,6 @@ class TeamsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        taskGetLocalTeams()
 
         if(super.hasConnection){
             if(FoppalApplication.getInstance().footballTeams.isNullOrEmpty()) {
@@ -67,13 +70,17 @@ class TeamsFragment : BaseFragment() {
     override fun onDestroy() {
         super.onDestroy()
         teamsList = listOf()
+        job?.cancel()
     }
 
     private fun taskGetTeams(){
-        doAsync {
+        job = Job()
+        job?.let {thisJob ->
+            CoroutineScope(IO + thisJob).launch {
                 swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
                 teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
-                teamsList.forEach {team: Team -> run {
+                teamsList.forEach {team: Team ->
+                    run {
                         val footballTeam = FootballTeam()
                         footballTeam.intlName = team.intlName
                         footballTeam.teamName = team.teamName
@@ -83,12 +90,13 @@ class TeamsFragment : BaseFragment() {
                         FoppalApplication.getInstance().footballTeams.add(footballTeam)
                     }
                 }
-            uiThread {
-                recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
-                swipeFragment.isRefreshing = false
+                withContext(Main) {
+                    recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
+                    swipeFragment.isRefreshing = false
+                    job?.complete()
+                }
             }
         }
-
     }
 
     fun onClickTeam(team: FootballTeam) {

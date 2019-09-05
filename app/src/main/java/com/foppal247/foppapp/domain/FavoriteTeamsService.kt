@@ -1,7 +1,5 @@
 package com.foppal247.foppapp.domain
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.dao.FavoriteTeamsDatabaseManager
 import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
@@ -22,9 +20,9 @@ object FavoriteTeamsService {
     fun saveFavoriteTeam() {
         val daoFavoriteTeam = FavoriteTeamsDatabaseManager.getFavoriteTeamsDAO()
         val daoTeam = FootballTeamsDatabaseManager.getFootballTeamsDAO()
-        val team = daoTeam.getByIntlName(FoppalApplication.getInstance().selectedIntlTeamName as String)
+        val team = daoTeam.getByIntlName(FoppalApplication.getInstance().selectedIntlTeamName)
         val favorite = FavoriteTeam()
-        favorite.country = FoppalApplication.getInstance().country as String
+        favorite.country = FoppalApplication.getInstance().country
         favorite.intlName = team?.intlName as String
         favorite.league = team.league
         favorite.teamName = team.teamName

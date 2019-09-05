@@ -10,30 +10,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.foppal247.foppapp.R
 import com.foppal247.foppapp.adapter.NewsAdapter
 import com.foppal247.foppapp.domain.model.News
-import com.foppal247.foppapp.domain.NewsService
 import kotlinx.android.synthetic.main.fragment_news.*
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.foppal247.foppapp.FoppalApplication
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import androidx.recyclerview.widget.RecyclerView
-import com.foppal247.foppapp.domain.NewsRepository
-import com.foppal247.foppapp.utils.AndroidUtils
 import com.foppal247.foppapp.viewModels.NewsViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import org.jetbrains.anko.support.v4.runOnUiThread
 import org.jetbrains.anko.support.v4.toast
 
 
 class NewsFragment : BaseFragment() {
-    private var isLoading = false
-    lateinit var job: CompletableJob
     val adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
+    private lateinit var newsViewModel: NewsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
@@ -47,13 +37,23 @@ class NewsFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
+        newsViewModel = ViewModelProvider(this).get(NewsViewModel::class.java)
+        newsViewModel.newsList.observe(this, Observer { newsList ->
+            if(newsViewModel.page.value == 1){
+                adapter.setNewsData(newsList)
+            } else {
+                adapter.addNewsData(newsList)
+            }
+            swipeFragment.isRefreshing = false
+        })
 
     }
 
     @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
-        swipeFragment.setOnRefreshListener { if(hasConnection) taskNews()}
+        swipeFragment.setOnRefreshListener { newsViewModel.setPage(1)}
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,
             R.color.refresh_progress_2,
@@ -65,12 +65,17 @@ class NewsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         checkConnection()
-        if(super.hasConnection && FoppalApplication.getInstance().newsList.isEmpty()) {
-            taskNews()
-        } else {
-            recyclerView.adapter = NewsAdapter(FoppalApplication.getInstance().newsList) { onClickNews(it) }
-            swipeFragment.isRefreshing = false
+        if(super.hasConnection) {
+            swipeFragment.isRefreshing = true
+            if(FoppalApplication.getInstance().selectedIntlTeamName.isNotEmpty()) {
+                newsViewModel.setTeam(FoppalApplication.getInstance().selectedIntlTeamName)
+            }
+            newsViewModel.setLeague(FoppalApplication.getInstance().league?.leagueName as Int)
+            newsViewModel.setEnglishNews(FoppalApplication.getInstance().englishNews)
+            newsViewModel.setCountry(FoppalApplication.getInstance().country)
+            newsViewModel.setPage(FoppalApplication.getInstance().pageNumber)
         }
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -78,31 +83,13 @@ class NewsFragment : BaseFragment() {
                 val totalItemCount = (recyclerView.layoutManager as LinearLayoutManager).itemCount
                 val firstVisibleItemPosition = (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                // Load more if we have reach the end to the recyclerView
                 if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                     && firstVisibleItemPosition >= 0) {
-                    if (!isLoading && AndroidUtils.isNetworkAvailable(context)){
-                        isLoading = true
+                    if (!swipeFragment.isRefreshing && hasConnection){
                         toast(getString(R.string.getting_more_news))
                         swipeFragment.isRefreshing = true
-                        job = Job()
-                        job.let { thisJob ->
-                            CoroutineScope(IO + thisJob).launch {
-                                FoppalApplication.getInstance().pageNumber++
-                                val newsList = NewsService.getMoreNews()
-                                withContext(Main) {
-                                    var itemCount = adapter.itemCount
-                                    newsList.forEach {
-                                        adapter.news.add(itemCount, it)
-                                        adapter.notifyDataSetChanged()
-                                        itemCount++
-                                        job.complete()
-                                    }
-                                }
-                                isLoading = false
-                            }
-                        }
-                        swipeFragment.isRefreshing = false
+                        val page = newsViewModel.page.value?.plus(1)
+                        newsViewModel.setPage(page as Int)
                     }
                 }
             }
@@ -115,28 +102,10 @@ class NewsFragment : BaseFragment() {
         FoppalApplication.getInstance().selectedIntlTeamName = ""
         FoppalApplication.getInstance().selectedTeamName = ""
         FoppalApplication.getInstance().pageNumber = 1
-        job.cancel()
+        newsViewModel.cancelJobs()
     }
 
-    private fun taskNews(){
-        job = Job()
-        job.let { thisJob ->
-            CoroutineScope(IO + thisJob).launch {
-                swipeFragment.isRefreshing = !swipeFragment.isRefreshing
-                NewsService.getNews()
-                withContext(Main) {
-                    adapter.news = FoppalApplication.getInstance().newsList
-                    recyclerView.adapter = adapter
-                    swipeFragment.isRefreshing = false
-                    isLoading = false
-                    job.complete()
-                }
-            }
-
-        }
-    }
-
-    fun onClickNews(news: News) {
+    private fun onClickNews(news: News) {
         val url = news.url
         val intentToBrowser = Intent(Intent.ACTION_VIEW)
         intentToBrowser.data = Uri.parse(url)
