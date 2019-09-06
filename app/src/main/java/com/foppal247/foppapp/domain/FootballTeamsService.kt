@@ -55,6 +55,4 @@ object FootballTeamsService {
         val footballTeams = fromJson<List<Team>>(json)
         return footballTeams
     }
-
-
 }

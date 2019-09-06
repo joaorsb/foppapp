@@ -20,6 +20,7 @@ class NewsAdapter (
         news = data
         notifyDataSetChanged()
     }
+
     fun addNewsData(data: MutableList<News>){
         var position = itemCount
         data.forEach{
@@ -57,12 +58,5 @@ class NewsAdapter (
 
     }
 
-    class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-    }
-
-
-
-
-
+    class NewsViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

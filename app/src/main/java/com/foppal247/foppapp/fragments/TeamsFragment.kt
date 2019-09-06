@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.foppal247.foppapp.R
@@ -16,6 +18,7 @@ import com.foppal247.foppapp.domain.FootballTeamsService
 import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
+import com.foppal247.foppapp.viewModels.FootballTeamsViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
@@ -26,13 +29,13 @@ import org.jetbrains.anko.uiThread
 
 class TeamsFragment : BaseFragment() {
     private var teamsList = listOf<Team>()
-    private var job: CompletableJob? = null
+    private lateinit var teamsViewModel: FootballTeamsViewModel
+    private val adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               icicle: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_teams, container, false)
         return view
-
     }
 
     override fun onViewCreated(view: View, icicle: Bundle?) {
@@ -41,13 +44,32 @@ class TeamsFragment : BaseFragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.itemAnimator = DefaultItemAnimator()
         recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
+        teamsViewModel = ViewModelProvider(this).get(FootballTeamsViewModel::class.java)
+        teamsViewModel.apiTeams.observe(this, Observer {teams ->
+            adapter.setTeamsData(teams)
+            swipeFragment.isRefreshing = false
+
+        })
+        teamsViewModel.localTeams.observe(this, Observer { teams ->
+            if(teams.isNotEmpty()) {
+                adapter.setTeamsData(teams)
+                swipeFragment.isRefreshing = false
+
+            } else {
+                teamsViewModel.setHasLocalTeams(false)
+            }
+        })
 
     }
 
     @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
-        swipeFragment.setOnRefreshListener { taskGetTeams() }
+        swipeFragment.setOnRefreshListener {
+            teamsViewModel.setCountry(FoppalApplication.getInstance().country)
+            teamsViewModel.setLeague(FoppalApplication.getInstance().league?.leagueName as Int)
+        }
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,
             R.color.refresh_progress_2,
@@ -59,47 +81,19 @@ class TeamsFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         if(super.hasConnection){
-            if(FoppalApplication.getInstance().footballTeams.isNullOrEmpty()) {
-                taskGetTeams()
-            } else {
-                recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
-            }
+            swipeFragment.isRefreshing = true
+            teamsViewModel.setCountry(FoppalApplication.getInstance().country)
+            teamsViewModel.setLeague(FoppalApplication.getInstance().league?.leagueName as Int)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         teamsList = listOf()
-        job?.cancel()
+        teamsViewModel.cancel()
     }
 
-    private fun taskGetTeams(){
-        job = Job()
-        job?.let {thisJob ->
-            CoroutineScope(IO + thisJob).launch {
-                swipeFragment.isRefreshing = ! swipeFragment.isRefreshing
-                teamsList = FootballTeamsService.getFootballTeamsByLeagueREST()
-                teamsList.forEach {team: Team ->
-                    run {
-                        val footballTeam = FootballTeam()
-                        footballTeam.intlName = team.intlName
-                        footballTeam.teamName = team.teamName
-                        footballTeam.league = FoppalApplication.getInstance().league?.leagueName
-                        val dao = FootballTeamsDatabaseManager.getFootballTeamsDAO()
-                        dao.insert(footballTeam)
-                        FoppalApplication.getInstance().footballTeams.add(footballTeam)
-                    }
-                }
-                withContext(Main) {
-                    recyclerView.adapter = TeamsAdapter(FoppalApplication.getInstance().footballTeams) { onClickTeam(it)}
-                    swipeFragment.isRefreshing = false
-                    job?.complete()
-                }
-            }
-        }
-    }
-
-    fun onClickTeam(team: FootballTeam) {
+    private fun onClickTeam(team: FootballTeam) {
         FoppalApplication.getInstance().englishNews = false
         FoppalApplication.getInstance().newsList = mutableListOf()
 
@@ -107,6 +101,4 @@ class TeamsFragment : BaseFragment() {
         FoppalApplication.getInstance().selectedTeamName = team.teamName
         startActivity<NewsListActivity>("leagueType" to FoppalApplication.getInstance().league)
     }
-
-
 }
