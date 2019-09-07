@@ -14,17 +14,10 @@ import kotlinx.android.synthetic.main.fragment_teams.*
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.activity.NewsListActivity
 import com.foppal247.foppapp.adapter.TeamsAdapter
-import com.foppal247.foppapp.domain.FootballTeamsService
-import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FootballTeam
 import com.foppal247.foppapp.domain.model.Team
 import com.foppal247.foppapp.viewModels.FootballTeamsViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.startActivity
-import org.jetbrains.anko.uiThread
 
 
 class TeamsFragment : BaseFragment() {

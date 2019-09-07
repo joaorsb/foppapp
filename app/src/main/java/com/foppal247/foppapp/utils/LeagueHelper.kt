@@ -26,7 +26,7 @@ object LeagueHelper {
                 leagueName = "laliga"
             }
             LeagueTypes.laliga2 -> {
-                leagueName = "la_liga2"
+                leagueName = "laliga2"
             }
             LeagueTypes.allsvenskan -> {
                 leagueName = "allsvenskan"

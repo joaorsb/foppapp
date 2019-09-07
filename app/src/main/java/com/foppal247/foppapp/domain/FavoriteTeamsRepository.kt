@@ -1,7 +1,6 @@
 package com.foppal247.foppapp.domain
 
 import androidx.lifecycle.LiveData
-import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.dao.FavoriteTeamsDatabaseManager
 import com.foppal247.foppapp.domain.dao.FootballTeamsDatabaseManager
 import com.foppal247.foppapp.domain.model.FavoriteTeam
@@ -53,12 +52,12 @@ object FavoriteTeamsRepository {
                             favorite.teamName = team.teamName
                             dao.insert(favorite)
                         }
+                        FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
+                            .addOnCompleteListener {
+                                result = true
+                            }
                         withContext(Main){
                             EventBus.getDefault().post(FavoriteEvent(favorite))
-                            FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
-                                .addOnCompleteListener {
-                                    result = true
-                                }
                             value = result
                             job?.complete()
                         }

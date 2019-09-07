@@ -13,21 +13,17 @@ import org.jetbrains.anko.uiThread
 object FavoriteTeamsService {
     private val dao = FavoriteTeamsDatabaseManager.getFavoriteTeamsDAO()
 
-    fun getFavoriteTeams(): MutableList<FavoriteTeam> {
-        return dao.findAll()
-    }
-
     fun saveFavoriteTeam() {
-        val daoFavoriteTeam = FavoriteTeamsDatabaseManager.getFavoriteTeamsDAO()
-        val daoTeam = FootballTeamsDatabaseManager.getFootballTeamsDAO()
-        val team = daoTeam.getByIntlName(FoppalApplication.getInstance().selectedIntlTeamName)
-        val favorite = FavoriteTeam()
-        favorite.country = FoppalApplication.getInstance().country
-        favorite.intlName = team?.intlName as String
-        favorite.league = team.league
-        favorite.teamName = team.teamName
-        daoFavoriteTeam.insert(favorite)
         doAsync {
+            val daoFavoriteTeam = FavoriteTeamsDatabaseManager.getFavoriteTeamsDAO()
+            val daoTeam = FootballTeamsDatabaseManager.getFootballTeamsDAO()
+            val team = daoTeam.getByIntlName(FoppalApplication.getInstance().selectedIntlTeamName)
+            val favorite = FavoriteTeam()
+            favorite.country = FoppalApplication.getInstance().country
+            favorite.intlName = team?.intlName as String
+            favorite.league = team.league
+            favorite.teamName = team.teamName
+            daoFavoriteTeam.insert(favorite)
             uiThread {
                 EventBus.getDefault().post(FavoriteEvent(favorite))
                 FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)

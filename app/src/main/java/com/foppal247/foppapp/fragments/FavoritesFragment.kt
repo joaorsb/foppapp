@@ -56,6 +56,7 @@ class FavoritesFragment: BaseFragment() {
         favoriteTeamViewModel = ViewModelProvider(this).get(FavoriteTeamsViewModel::class.java)
         favoriteTeamViewModel.favoriteTeams.observe(this, Observer {favoriteTeams ->
             adapter.setTeams(favoriteTeams)
+            FoppalApplication.getInstance().favoriteTeams = favoriteTeams
             setupSwipeToDelete()
         })
     }
