@@ -25,8 +25,9 @@ object FavoriteTeamsRepository {
                 super.onActive()
                 job?.let {thisJob ->
                     CoroutineScope(IO + thisJob).launch {
+                        val teams = dao.findAll()
                         withContext(Main){
-                            value = dao.findAll()
+                            value = teams
                             job?.complete()
                         }
                     }
@@ -35,29 +36,29 @@ object FavoriteTeamsRepository {
         }
     }
 
-    fun setFavoriteTeam(): LiveData<Boolean> {
+    fun saveFavoriteTeam(teamName: String, country: String): LiveData<Boolean> {
         job = Job()
         return object : LiveData<Boolean>() {
             override fun onActive() {
                 super.onActive()
                 job?.let {thisJob ->
                     CoroutineScope(IO + thisJob).launch {
+                        val team = daoTeam.getByIntlName(teamName)
+                        val favorite = FavoriteTeam()
+                        var result = false
+                        if(team != null){
+                            favorite.country = country
+                            favorite.intlName = team.intlName
+                            favorite.league = team.league
+                            favorite.teamName = team.teamName
+                            dao.insert(favorite)
+                        }
                         withContext(Main){
-                            val team = daoTeam.getByIntlName(FoppalApplication.getInstance().selectedIntlTeamName)
-                            val favorite = FavoriteTeam()
-                            var result = false
-                            if(team != null){
-                                favorite.country = FoppalApplication.getInstance().country
-                                favorite.intlName = team?.intlName as String
-                                favorite.league = team.league
-                                favorite.teamName = team.teamName
-                                dao.insert(favorite)
-                                EventBus.getDefault().post(FavoriteEvent(favorite))
-                                FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
-                                    .addOnCompleteListener {
-                                        result = true
-                                    }
-                            }
+                            EventBus.getDefault().post(FavoriteEvent(favorite))
+                            FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
+                                .addOnCompleteListener {
+                                    result = true
+                                }
                             value = result
                             job?.complete()
                         }
@@ -74,9 +75,9 @@ object FavoriteTeamsRepository {
                 super.onActive()
                 job?.let {thisJob ->
                     CoroutineScope(IO + thisJob).launch {
+                        dao.delete(favoriteTeam)
                         withContext(Main){
                             var result = false
-                            dao.delete(favoriteTeam)
                             EventBus.getDefault().post(FavoriteEvent(favoriteTeam))
                             FirebaseMessaging.getInstance().unsubscribeFromTopic(favoriteTeam.intlName)
                                 .addOnCompleteListener { task ->

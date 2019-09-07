@@ -11,10 +11,15 @@ import com.foppal247.foppapp.extensions.addFragment
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.foppal247.foppapp.extensions.toast
 import com.foppal247.foppapp.fragments.NewsFragment
-import org.jetbrains.anko.doAsync
+import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 class NewsListActivity : BaseActivity() {
+    private lateinit var job: CompletableJob
 
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
@@ -33,7 +38,7 @@ class NewsListActivity : BaseActivity() {
                 title = getString(R.string.serieb)
             }
         } else {
-            title = FoppalApplication.getInstance().selectedTeamName ?: getString(league.leagueName)
+            title = FoppalApplication.getInstance().selectedTeamName
         }
 
         setupToolbar(R.id.toolbar, title, true)
@@ -63,10 +68,11 @@ class NewsListActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if(id == R.id.favorite) {
-            doAsync {
-                FavoriteTeamsService.saveFavoriteTeam()
-                foppalInstance.favoriteTeams = FavoriteTeamsService.getFavoriteTeams()
-
+            job = Job()
+            job.let {thisJob ->
+                CoroutineScope(IO + thisJob).launch {
+                    FavoriteTeamsService.saveFavoriteTeam()
+                }
             }
             toast(getText(R.string.favorite_added))
         }

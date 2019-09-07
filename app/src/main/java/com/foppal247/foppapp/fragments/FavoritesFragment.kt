@@ -1,11 +1,11 @@
 package com.foppal247.foppapp.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.EventLog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +18,8 @@ import com.foppal247.foppapp.adapter.FavoriteTeamsAdapter
 import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.domain.model.FavoriteTeam
 import com.foppal247.foppapp.extensions.FavoriteEvent
+import com.foppal247.foppapp.viewModels.FavoriteTeamsViewModel
+import kotlinx.android.synthetic.main.fragment_teams.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.jetbrains.anko.doAsync
@@ -30,7 +32,8 @@ import org.jetbrains.anko.yesButton
 
 
 class FavoritesFragment: BaseFragment() {
-
+    private val adapter = FavoriteTeamsAdapter(FoppalApplication.getInstance().favoriteTeams) { onClickTeam(it)}
+    private lateinit var favoriteTeamViewModel: FavoriteTeamsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EventBus.getDefault().register(this)
@@ -49,35 +52,31 @@ class FavoritesFragment: BaseFragment() {
         recyclerViewFavorites.layoutManager = LinearLayoutManager(activity)
         recyclerViewFavorites.itemAnimator = DefaultItemAnimator()
         recyclerViewFavorites.setHasFixedSize(true)
+        recyclerViewFavorites.adapter = adapter
+        favoriteTeamViewModel = ViewModelProvider(this).get(FavoriteTeamsViewModel::class.java)
+        favoriteTeamViewModel.favoriteTeams.observe(this, Observer {favoriteTeams ->
+            adapter.setTeams(favoriteTeams)
+            setupSwipeToDelete()
+        })
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         if(super.hasConnection){
-            taskGetFavoriteTeams()
+            favoriteTeamViewModel.setLoadFavorites(true)
         }
     }
 
     @Subscribe
     fun onRefresh(event: FavoriteEvent){
-        taskGetFavoriteTeams()
+        favoriteTeamViewModel.setLoadFavorites(true)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         EventBus.getDefault().unregister(this)
-    }
-
-    private fun taskGetFavoriteTeams(){
-        doAsync {
-               FoppalApplication.getInstance().favoriteTeams = FavoriteTeamsService.getFavoriteTeams()
-            uiThread {
-                recyclerViewFavorites.adapter = FavoriteTeamsAdapter(FoppalApplication.getInstance().favoriteTeams) { onClickTeam(it)}
-                setupSwipeToDelete()
-            }
-        }
-
+        favoriteTeamViewModel.cancelJobs()
     }
 
     private fun onClickTeam(team: FavoriteTeam) {
@@ -104,6 +103,7 @@ class FavoritesFragment: BaseFragment() {
                     yesButton {
                         (recyclerViewFavorites.adapter as FavoriteTeamsAdapter).removeItem(viewHolder)
                         toast(context?.getText(R.string.excluded_success) as String)
+                        favoriteTeamViewModel.setLoadFavorites(true)
                     }
                     noButton {
                         recyclerViewFavorites.adapter?.notifyDataSetChanged()
