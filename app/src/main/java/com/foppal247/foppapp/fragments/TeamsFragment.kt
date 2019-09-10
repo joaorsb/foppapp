@@ -51,6 +51,8 @@ class TeamsFragment : BaseFragment() {
 
             } else {
                 teamsViewModel.setHasLocalTeams(false)
+                swipeFragment.isRefreshing = false
+
             }
         })
 
@@ -62,6 +64,8 @@ class TeamsFragment : BaseFragment() {
         swipeFragment.setOnRefreshListener {
             teamsViewModel.setCountry(FoppalApplication.getInstance().country)
             teamsViewModel.setLeague(FoppalApplication.getInstance().league?.leagueName as Int)
+            swipeFragment.isRefreshing = false
+
         }
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,

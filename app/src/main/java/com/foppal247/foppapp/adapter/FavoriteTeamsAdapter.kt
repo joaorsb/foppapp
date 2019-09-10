@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.FavoriteTeamsRepository
 import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.domain.model.FavoriteTeam
 import kotlinx.android.synthetic.main.adapter_favoriteteams.view.*
@@ -37,7 +38,7 @@ class FavoriteTeamsAdapter(
     fun removeItem(holder: RecyclerView.ViewHolder){
         val position = holder.adapterPosition
         val favoriteTeam = favoriteTeams[position]
-        FavoriteTeamsService.deleteFavorite(favoriteTeam)
+        FavoriteTeamsRepository.deleteFavoriteTeam(favoriteTeam)
         favoriteTeams.removeAt(holder.adapterPosition)
         notifyItemRemoved(holder.adapterPosition)
     }

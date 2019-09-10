@@ -53,7 +53,10 @@ class NewsFragment : BaseFragment() {
     @SuppressLint("ResourceAsColor")
     override fun onResume() {
         super.onResume()
-        swipeFragment.setOnRefreshListener { newsViewModel.setPage(1)}
+        swipeFragment.setOnRefreshListener {
+            newsViewModel.setPage(1)
+            swipeFragment.isRefreshing = false
+        }
         swipeFragment.setColorSchemeColors(
             R.color.refresh_progress_1,
             R.color.refresh_progress_2,

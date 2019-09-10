@@ -35,57 +35,41 @@ object FavoriteTeamsRepository {
         }
     }
 
-    fun saveFavoriteTeam(teamName: String, country: String): LiveData<Boolean> {
+    fun saveFavoriteTeam(teamName: String, country: String) {
         job = Job()
-        return object : LiveData<Boolean>() {
-            override fun onActive() {
-                super.onActive()
-                job?.let {thisJob ->
-                    CoroutineScope(IO + thisJob).launch {
-                        val team = daoTeam.getByIntlName(teamName)
-                        val favorite = FavoriteTeam()
-                        var result = false
-                        if(team != null){
-                            favorite.country = country
-                            favorite.intlName = team.intlName
-                            favorite.league = team.league
-                            favorite.teamName = team.teamName
-                            dao.insert(favorite)
-                        }
-                        FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
-                            .addOnCompleteListener {
-                                result = true
-                            }
-                        withContext(Main){
-                            EventBus.getDefault().post(FavoriteEvent(favorite))
-                            value = result
-                            job?.complete()
-                        }
+        job?.let {thisJob ->
+            CoroutineScope(IO + thisJob).launch {
+                val team = daoTeam.getByIntlName(teamName)
+                val favorite = FavoriteTeam()
+                if(team != null){
+                    favorite.country = country
+                    favorite.intlName = team.intlName
+                    favorite.league = team.league
+                    favorite.teamName = team.teamName
+                    dao.insert(favorite)
+                }
+                FirebaseMessaging.getInstance().subscribeToTopic(favorite.intlName)
+                    .addOnCompleteListener {
                     }
+                withContext(Main){
+                    EventBus.getDefault().post(FavoriteEvent(favorite))
+                    job?.complete()
                 }
             }
         }
     }
 
-    fun deleteFavoriteTeam(favoriteTeam: FavoriteTeam): LiveData<Boolean> {
+    fun deleteFavoriteTeam(favoriteTeam: FavoriteTeam) {
         job = Job()
-        return object : LiveData<Boolean>() {
-            override fun onActive() {
-                super.onActive()
-                job?.let {thisJob ->
-                    CoroutineScope(IO + thisJob).launch {
-                        dao.delete(favoriteTeam)
-                        withContext(Main){
-                            var result = false
-                            EventBus.getDefault().post(FavoriteEvent(favoriteTeam))
-                            FirebaseMessaging.getInstance().unsubscribeFromTopic(favoriteTeam.intlName)
-                                .addOnCompleteListener { task ->
-                                    result = true
-                                }
-                            value = result
-                            job?.complete()
-                        }
+        job?.let {thisJob ->
+            CoroutineScope(IO + thisJob).launch {
+                dao.delete(favoriteTeam)
+                EventBus.getDefault().post(FavoriteEvent(favoriteTeam))
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(favoriteTeam.intlName)
+                    .addOnCompleteListener { task ->
                     }
+                withContext(Main){
+                    job?.complete()
                 }
             }
         }

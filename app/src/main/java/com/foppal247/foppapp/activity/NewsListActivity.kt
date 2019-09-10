@@ -6,6 +6,7 @@ import android.view.MenuItem
 import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.model.LeagueTypes
 import com.foppal247.foppapp.R
+import com.foppal247.foppapp.domain.FavoriteTeamsRepository
 import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.extensions.addFragment
 import com.foppal247.foppapp.extensions.setupToolbar
@@ -62,7 +63,7 @@ class NewsListActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if(id == R.id.favorite) {
-            FavoriteTeamsService.saveFavoriteTeam()
+            FavoriteTeamsRepository.saveFavoriteTeam(foppalInstance.selectedIntlTeamName, foppalInstance.country)
             toast(getText(R.string.favorite_added))
         }
         return super.onOptionsItemSelected(item)
