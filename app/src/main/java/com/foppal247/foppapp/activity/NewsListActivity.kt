@@ -7,11 +7,12 @@ import com.foppal247.foppapp.FoppalApplication
 import com.foppal247.foppapp.domain.model.LeagueTypes
 import com.foppal247.foppapp.R
 import com.foppal247.foppapp.domain.FavoriteTeamsRepository
-import com.foppal247.foppapp.domain.FavoriteTeamsService
 import com.foppal247.foppapp.extensions.addFragment
 import com.foppal247.foppapp.extensions.setupToolbar
 import com.foppal247.foppapp.extensions.toast
 import com.foppal247.foppapp.fragments.NewsFragment
+import com.google.android.gms.ads.AdRequest
+import kotlinx.android.synthetic.main.activity_news_list.*
 
 
 class NewsListActivity : BaseActivity() {
@@ -20,6 +21,8 @@ class NewsListActivity : BaseActivity() {
         super.onCreate(icicle)
         setContentView(R.layout.activity_news_list)
         lateinit var league: LeagueTypes
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
 
         if(intent.getSerializableExtra("leagueType") != null){
             league = intent.getSerializableExtra("leagueType") as LeagueTypes

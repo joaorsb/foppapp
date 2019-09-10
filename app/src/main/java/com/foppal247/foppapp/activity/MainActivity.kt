@@ -16,12 +16,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.startActivity
 import kotlinx.android.synthetic.main.toolbar.*
 import com.foppal247.foppapp.fragments.FavoritesFragment
+import com.google.android.gms.ads.MobileAds
 
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
+        MobileAds.initialize(this)
+
         setContentView(R.layout.activity_main)
         setupToolbar(R.id.toolbar)
         setupNavDrawer()
